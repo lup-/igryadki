@@ -5,9 +5,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "watch": "vue-cli-service build --watch",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "bootstrap": "^4.5.0",
+    "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11"
   },
