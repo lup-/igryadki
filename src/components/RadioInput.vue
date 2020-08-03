@@ -1,12 +1,15 @@
 <template>
-    <div class="btn-group radio-group" role="group">
-        <label class="btn" v-for="variant in values" :key="variant.code"
-                :class="{'btn-outline-primary': !isSelected(variant), 'btn-primary': isSelected(variant)}"
-        >
-            <span v-if="variant.title">{{variant.title}}</span>
-            <img v-if="variant.image" :src="variant.image">
-            <input type="radio" :value="variant.value" v-model="selected" @change="emitValue">
-        </label>
+    <div class="d-flex">
+        <div class="btn-group radio-group" role="group">
+            <label class="btn" v-for="variant in values" :key="variant.code"
+                    :class="{'btn-outline-primary': !isSelected(variant), 'btn-primary': isSelected(variant)}"
+            >
+                <span v-if="variant.title">{{variant.title}}</span>
+                <img v-if="variant.image" :src="variant.image">
+                <input type="radio" :value="variant.value" v-model="selected" @change="emitValue">
+            </label>
+        </div>
+        <slot name="append"></slot>
     </div>
 </template>
 

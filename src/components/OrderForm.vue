@@ -7,12 +7,24 @@
                 <label class="col-form-label">{{getFieldTitle(field)}}</label>
             </b-col>
             <b-col cols="12" sm="10">
-                <radio-input v-if="field.type === 'radio'" :values="getFieldValues(field)" v-model="values[field.code]"></radio-input>
+                <radio-input v-if="field.type === 'radio'" :values="getFieldValues(field)" v-model="values[field.code]">
+                    <template v-slot:append v-if="formType === 'teplica' && field.code === 'teplica'">
+                        <label
+                                class="btn btn-outline-primary ml-4"
+                                :class="{'active': customSize}"
+                                @click="customSize = true"
+                        >Свой размер</label>
+                    </template>
+                </radio-input>
                 <color-input v-else-if="field.type === 'color'" v-model="values[field.code]"></color-input>
                 <int-input v-else-if="field.type === 'int'" v-model="values[field.code]"></int-input>
 
-                <b-button variant="primary" v-if="formType === 'teplica' && field.code === 'form' && !customSize" @click="customSize = true">Свой размер</b-button>
-                <teplica-sh v-if="formType === 'teplica' && field.code === 'form' && customSize"></teplica-sh>
+                <div v-if="formType === 'teplica' && field.code === 'form' && customSize">
+                    <label>Внутренние размеры для грядок (Д x Ш)</label>
+                    <b-form-input v-model="teplSizes['Ш'][0]" class="inline-input" number></b-form-input> x
+                    <b-form-input v-model="teplSizes['Ш'][1]" class="inline-input" number></b-form-input>
+                    <teplica-sh :base-width="teplSizes['Ш'][0]" :base-height="teplSizes['Ш'][1]"></teplica-sh>
+                </div>
             </b-col>
         </b-form-row>
         <b-form-row class="my-4">
@@ -44,6 +56,7 @@
 
             return {
                 customSize: false,
+                teplSizes: {'Ш': [290, 390]},
                 values
             }
         },
@@ -91,5 +104,8 @@
 </script>
 
 <style scoped>
-
+    .inline-input {
+        display: inline-block;
+        width: auto;
+    }
 </style>

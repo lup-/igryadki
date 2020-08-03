@@ -1,5 +1,5 @@
 <template>
-    <div class="scheme-sh">
+    <div class="scheme-sh m-4">
         <svg
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:cc="http://creativecommons.org/ns#"
@@ -14,65 +14,8 @@
                 viewBox="0 0 210.8434 220.04291"
                 version="1.1"
                 id="svg8"
-                inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
                 sodipodi:docname="gryadka-Sh.svg"
-                inkscape:export-filename="/home/lup/Рабочий стол/грядки/gryadka-Sh.png"
-                inkscape:export-xdpi="110"
-                inkscape:export-ydpi="110">
-            <defs id="defs2">
-                <marker
-                        id="ArrowStartVertical"
-                        orient="auto"
-                        refY="0"
-                        refX="0"
-                        style="overflow:visible">
-                    <path
-                            id="path1120"
-                            d="M 0,0 5,-5 -12.5,0 5,5 Z"
-                            style="fill:#da3a3a;fill-opacity:1;fill-rule:evenodd;stroke:#da3a3a;stroke-width:1.00000003pt;stroke-opacity:1"
-                            transform="matrix(0.8,0,0,0.8,10,0)"
-                            inkscape:connector-curvature="0" />
-                </marker>
-                <marker
-                        id="ArrowEndVertical"
-                        orient="auto"
-                        refY="0"
-                        refX="0"
-                        style="overflow:visible">
-                    <path
-                            id="path1123"
-                            d="M 0,0 5,-5 -12.5,0 5,5 Z"
-                            style="fill:#da3a3a;fill-opacity:1;fill-rule:evenodd;stroke:#da3a3a;stroke-width:1.00000003pt;stroke-opacity:1"
-                            transform="matrix(-0.8,0,0,-0.8,-10,0)"
-                            inkscape:connector-curvature="0" />
-                </marker>
-                <marker
-                        orient="auto"
-                        refY="0"
-                        refX="0"
-                        id="ArrowStartHorizontal"
-                        style="overflow:visible">
-                    <path
-                            inkscape:connector-curvature="0"
-                            id="path1120-2"
-                            d="M 0,0 5,-5 -12.5,0 5,5 Z"
-                            style="fill:#da3a3a;fill-opacity:1;fill-rule:evenodd;stroke:#da3a3a;stroke-width:1.00000003pt;stroke-opacity:1"
-                            transform="matrix(0.8,0,0,0.8,10,0)" />
-                </marker>
-                <marker
-                        orient="auto"
-                        refY="0"
-                        refX="0"
-                        id="ArrowEndHorizontal"
-                        style="overflow:visible">
-                    <path
-                            inkscape:connector-curvature="0"
-                            id="path1123-6"
-                            d="M 0,0 5,-5 -12.5,0 5,5 Z"
-                            style="fill:#da3a3a;fill-opacity:1;fill-rule:evenodd;stroke:#da3a3a;stroke-width:1.00000003pt;stroke-opacity:1"
-                            transform="matrix(-0.8,0,0,-0.8,-10,0)" />
-                </marker>
-            </defs>
+        >
             <sodipodi:namedview
                     id="base"
                     pagecolor="#ffffff"
@@ -128,74 +71,118 @@
                     </cc:Work>
                 </rdf:RDF>
             </metadata>
-            <g
-                    inkscape:label="Layer 1"
-                    inkscape:groupmode="layer"
-                    id="layer1"
-                    transform="translate(0.30449593,-5.3929499)">
-
-                <rect id="g1_left_bort" :width="bortsPx[0]['left'].w" :height="bortsPx[0]['left'].h" :x="bortsPx[0]['left'].x" :y="bortsPx[0]['left'].y"/>
-                <rect id="g1_bottom_bort" :width="bortsPx[0]['bottom'].w" :height="bortsPx[0]['bottom'].h" :x="bortsPx[0]['bottom'].x" :y="bortsPx[0]['bottom'].y"/>
-                <rect id="g1_right_bort" :width="bortsPx[0]['right'].w" :height="bortsPx[0]['right'].h" :x="bortsPx[0]['right'].x" :y="bortsPx[0]['right'].y"/>
-                <rect id="g4_bottom_bort_left" :width="bortsPx[3]['bottomLeft'].w" :height="bortsPx[3]['bottomLeft'].h" :x="bortsPx[3]['bottomLeft'].x" :y="bortsPx[3]['bottomLeft'].y"/>
-                <rect id="g4_left_bort" :width="bortsPx[3]['left'].w" :height="bortsPx[3]['left'].h" :x="bortsPx[3]['left'].x" :y="bortsPx[3]['left'].y"/>
+            <g>
                 <rect id="g1_top_bort" :width="bortsPx[0]['top'].w" :height="bortsPx[0]['top'].h" :x="bortsPx[0]['top'].x" :y="bortsPx[0]['top'].y"/>
-                <rect id="g2_left_bort" :width="bortsPx[1]['left'].w" :height="bortsPx[1]['left'].h" :x="bortsPx[1]['left'].x" :y="bortsPx[1]['left'].y"/>
-                <rect id="g2_bottom_bort" :width="bortsPx[1]['bottom'].w" :height="bortsPx[1]['bottom'].h" :x="bortsPx[1]['bottom'].x" :y="bortsPx[1]['bottom'].y"/>
-                <rect id="g2_right_bort" :width="bortsPx[1]['right'].w" :height="bortsPx[1]['right'].h" :x="bortsPx[1]['right'].x" :y="bortsPx[1]['right'].y"/>
-                <rect id="g4_bottom_bort_right" :width="bortsPx[3]['bottomRight'].w" :height="bortsPx[3]['bottomRight'].h" :x="bortsPx[3]['bottomRight'].x" :y="bortsPx[3]['bottomRight'].y"/>
-                <rect id="g3_left_bort" :width="bortsPx[2]['left'].w" :height="bortsPx[2]['left'].h" :x="bortsPx[2]['left'].x" :y="bortsPx[2]['left'].y"/>
-                <rect id="g3_bottom_bort" :width="bortsPx[2]['bottom'].w" :height="bortsPx[2]['bottom'].h" :x="bortsPx[2]['bottom'].x" :y="bortsPx[2]['bottom'].y"/>
-                <rect id="g3_right_bort" :width="bortsPx[2]['right'].w" :height="bortsPx[2]['right'].h" :x="bortsPx[2]['right'].x" :y="bortsPx[2]['right'].y"/>
-                <rect id="g4_right_bort" :width="bortsPx[3]['right'].w" :height="bortsPx[3]['right'].h" :x="bortsPx[3]['right'].x" :y="bortsPx[3]['right'].y"/>
+                <rect id="g1_left_bort" :width="bortsPx[0]['left'].w" :height="bortsPx[0]['left'].h" :x="bortsPx[0]['left'].x" :y="bortsPx[0]['left'].y"/>
+                <rect id="g1_bottom_bort" class="handler movable"
+                        :width="bortsPx[0]['bottom'].w"
+                        :height="bortsPx[0]['bottom'].h"
+                        :x="bortsPx[0]['bottom'].x"
+                        :y="bortsPx[0]['bottom'].y"
+                        @mousedown="event => startMove(event, 0, 'bottom')"
+                        @touchstart.prevent="event => startMove(event, 0, 'bottom')"
+                />
+                <rect id="g1_right_bort" class="handler movable"
+                        :width="bortsPx[0]['right'].w"
+                        :height="bortsPx[0]['right'].h"
+                        :x="bortsPx[0]['right'].x"
+                        :y="bortsPx[0]['right'].y"
+                        @mousedown="event => startMove(event, 0, 'right')"
+                        @touchstart.prevent="event => startMove(event, 0, 'right')"
+                />
+
+                <rect id="g2_left_bort" class="handler movable"
+                        :width="bortsPx[1]['left'].w"
+                        :height="bortsPx[1]['left'].h"
+                        :x="bortsPx[1]['left'].x"
+                        :y="bortsPx[1]['left'].y"
+                        @mousedown="event => startMove(event, 1, 'left')"
+                        @touchstart.prevent="event => startMove(event, 1, 'left')"
+                />
+                <rect id="g2_bottom_bort" class="handler movable"
+                        :width="bortsPx[1]['bottom'].w"
+                        :height="bortsPx[1]['bottom'].h"
+                        :x="bortsPx[1]['bottom'].x"
+                        :y="bortsPx[1]['bottom'].y"
+                        @mousedown="event => startMove(event, 1, 'bottom')"
+                        @touchstart.prevent="event => startMove(event, 1, 'bottom')"
+                />
+                <rect id="g2_right_bort" class="handler movable"
+                        :width="bortsPx[1]['right'].w"
+                        :height="bortsPx[1]['right'].h"
+                        :x="bortsPx[1]['right'].x"
+                        :y="bortsPx[1]['right'].y"
+                        @mousedown="event => startMove(event, 1, 'right')"
+                        @touchstart.prevent="event => startMove(event, 1, 'right')"
+                />
+
                 <rect id="g3_top_bort" :width="bortsPx[2]['top'].w" :height="bortsPx[2]['top'].h" :x="bortsPx[2]['top'].x" :y="bortsPx[2]['top'].y"/>
+                <rect id="g3_left_bort" class="handler movable"
+                        :width="bortsPx[2]['left'].w"
+                        :height="bortsPx[2]['left'].h"
+                        :x="bortsPx[2]['left'].x"
+                        :y="bortsPx[2]['left'].y"
+                        @mousedown="event => startMove(event, 2, 'left')"
+                        @touchstart.prevent="event => startMove(event, 2, 'left')"
+                />
+                <rect id="g3_bottom_bort" class="handler movable"
+                        :width="bortsPx[2]['bottom'].w"
+                        :height="bortsPx[2]['bottom'].h"
+                        :x="bortsPx[2]['bottom'].x"
+                        :y="bortsPx[2]['bottom'].y"
+                        @mousedown="event => startMove(event, 2, 'bottom')"
+                        @touchstart.prevent="event => startMove(event, 2, 'bottom')"
+                />
+                <rect id="g3_right_bort"
+                        :width="bortsPx[2]['right'].w"
+                        :height="bortsPx[2]['right'].h"
+                        :x="bortsPx[2]['right'].x"
+                        :y="bortsPx[2]['right'].y"
+                />
+
                 <rect id="g4_top_bort" :width="bortsPx[3]['top'].w" :height="bortsPx[3]['top'].h" :x="bortsPx[3]['top'].x" :y="bortsPx[3]['top'].y"/>
+                <rect id="g4_left_bort" :width="bortsPx[3]['left'].w" :height="bortsPx[3]['left'].h" :x="bortsPx[3]['left'].x" :y="bortsPx[3]['left'].y"/>
+                <rect id="g4_right_bort" :width="bortsPx[3]['right'].w" :height="bortsPx[3]['right'].h" :x="bortsPx[3]['right'].x" :y="bortsPx[3]['right'].y"/>
+                <rect id="g4_bottom_bort_left" class="handler movable"
+                        :width="bortsPx[3]['bottomLeft'].w"
+                        :height="bortsPx[3]['bottomLeft'].h"
+                        :x="bortsPx[3]['bottomLeft'].x"
+                        :y="bortsPx[3]['bottomLeft'].y"
+                        @mousedown="event => startMove(event, 3, 'bottomLeft')"
+                        @touchstart.prevent="event => startMove(event, 3, 'bottomLeft')"
+                />
+                <rect id="g4_bottom_bort_right" class="handler movable"
+                        :width="bortsPx[3]['bottomRight'].w"
+                        :height="bortsPx[3]['bottomRight'].h"
+                        :x="bortsPx[3]['bottomRight'].x"
+                        :y="bortsPx[3]['bottomRight'].y"
+                        @mousedown="event => startMove(event, 3, 'bottomRight')"
+                        @touchstart.prevent="event => startMove(event, 3, 'bottomRight')"
+                />
+
+                <arrow v-for="(arrow, index) in arrowsPx" :key="index"
+                    :start="arrow.start"
+                    :end="arrow.end"
+                    :text="arrow.text"
+                    :text-position="arrow.textPosition"
+                ></arrow>
+
+                <handler v-for="handler in handlersPx" :key="handler.grIndex+handler.position"
+                        :center-x="handler.x"
+                        :center-y="handler.y"
+                        :vertical="handler.vertical"
+                ></handler>
 
                 <path v-for="(support, index) in supportD" :d="support" :id="'gx_support_'+index" :key="'gx_support_'+index" />
-
-                <path id="g2_left_arrow" :d="arrowsD[1]['left']" @mousedown="event => startMove(event, 1, 'left')" @touchstart.prevent="event => startMove(event, 1, 'left')"/>
-                <path id="g2_right_arrow" :d="arrowsD[1]['right']" @mousedown="event => startMove(event, 1, 'right')" @touchstart.prevent="event => startMove(event, 1, 'right')"/>
-                <path id="g3_left_arrow" :d="arrowsD[2]['left']" @mousedown="event => startMove(event, 2, 'left')" @touchstart.prevent="event => startMove(event, 2, 'left')"/>
-                <path id="g3_right_arrow" :d="arrowsD[2]['right']" @mousedown="event => startMove(event, 3, 'right')" @touchstart.prevent="event => startMove(event, 3, 'right')"/>
-                <path id="g1_right_arrow" :d="arrowsD[0]['right']" @mousedown="event => startMove(event, 0, 'right')" @touchstart.prevent="event => startMove(event, 0, 'right')"/>
-                <!--path id="g1_left_arrow" :d="arrowsD[0]['left']" @mousedown="event => startMove(event, 3, 'left')" @touchstart.prevent="event => startMove(event, 3, 'left')"/-->
-                <path id="g1_bottom_arrow" :d="arrowsD[0]['bottom']" @mousedown="event => startMove(event, 0, 'bottom')" @touchstart.prevent="event => startMove(event, 0, 'bottom')"/>
-                <path id="g2_bottom_arrow" :d="arrowsD[1]['bottom']" @mousedown="event => startMove(event, 1, 'bottom')" @touchstart.prevent="event => startMove(event, 1, 'bottom')"/>
-                <path id="g3_bottom_arrow" :d="arrowsD[2]['bottom']" @mousedown="event => startMove(event, 2, 'bottom')" @touchstart.prevent="event => startMove(event, 2, 'bottom')"/>
-                <path id="g4_bottom_arrow_left" :d="arrowsD[3]['bottomLeft']" @mousedown="event => startMove(event, 3, 'bottomLeft')" @touchstart.prevent="event => startMove(event, 3, 'bottomLeft')"/>
-                <path id="g4_bottom_arrow_right" :d="arrowsD[3]['bottomRight']" @mousedown="event => startMove(event, 3, 'bottomRight')" @touchstart.prevent="event => startMove(event, 3, 'bottomRight')"/>
-
-                <text v-for="(title, index) in lengthTitles" :key="'length_title'+index"
-                        :id="'g'+(index+1)+'_length_title'"
-                        :x="textPositions['length'][index].title.x" :y="textPositions['length'][index].title.y"
-                >
-                    {{title}}
-                </text>
-                <text v-for="(text, index) in lengthTexts" :key="'length_text'+index"
-                        :id="'g'+(index+1)+'_length_text'"
-                        :x="textPositions['length'][index].text.x" :y="textPositions['length'][index].text.y"
-                >
-                    {{text}}
-                </text>
-
-                <text v-for="(title, index) in widthTitles" :key="'width_title'+index"
-                        :id="'g'+(index+1)+'_width_title'"
-                        :x="textPositions['width'][index].title.x" :y="textPositions['width'][index].title.y"
-                >
-                    {{title}}
-                </text>
-                <text v-for="(text, index) in widthTexts" :key="'width_text'+index"
-                        :id="'g'+(index+1)+'_width_text'"
-                        :x="textPositions['width'][index].text.x" :y="textPositions['width'][index].text.y"
-                >
-                    {{text}}
-                </text>
             </g>
         </svg>
     </div>
 </template>
 
 <script>
+    import Handler from "@/components/Teplica/Handler";
+    import Arrow from "@/components/Teplica/Arrow";
+
     function getMousePos(mouseEvent, point) {
         point.x = (mouseEvent.clientX);
         point.y = (mouseEvent.clientY);
@@ -208,14 +195,22 @@
 
     export default {
         name: "TeplicaSh",
+        props: ['baseWidth', 'baseHeight'],
+        components: {Handler, Arrow},
         data() {
             //Все размеры внешние, т.е. содержат ширину бортов
+
+            let bortWidthCm = 1.5;
+            let passWidthCm = 50;
 
             let pixelToCm = 62/37.6803905;
             let cmToPixel = 1/pixelToCm;
 
             let bortPixelToCm = 1.5/5.735;
             let bortCmToPixel = 1/bortPixelToCm;
+
+            let minPrSizeCm = 30;
+            let minVhSizeCm = 30;
 
             return {
                 pixelToCm,
@@ -226,19 +221,36 @@
                 minLength: 100,
                 titleTextSizePx: 4.93888903,
                 numbersTextSizePx: 10.58333302,
-                bortWidthCm: 1.5,
+                bortWidthCm,
+                passWidthCm,
+                minPrSizeCm,
+                minVhSizeCm,
                 arrowWidthPx: 21.94932,
-                leftStartPx: 8.3789015,
-                topStartPx: 14.552918,
-                gryadkiBase: [
-                    {widthCm: 62, lengthCm: 195},
-                    {widthCm: 62, lengthCm: 145},
-                    {widthCm: 62, lengthCm: 195},
-                    {widthCm: 62, lengthCm: 300},
-                ]
+                leftStartPx: 0.26499999,
+                topStartPx: 0.26499999,
+                gryadkiBase: this.getBaseSizes(this.baseWidth, this.baseHeight, bortWidthCm, passWidthCm),
+            }
+        },
+        watch: {
+            baseWidth() {
+                this.gryadkiBase = this.getBaseSizes(this.baseWidth, this.baseHeight, this.bortWidthCm, this.passWidthCm);
+            },
+            baseHeight() {
+                this.gryadkiBase = this.getBaseSizes(this.baseWidth, this.baseHeight, this.bortWidthCm, this.passWidthCm);
             }
         },
         methods: {
+            getBaseSizes(baseWidth, baseHeight, bortWidth, passWidthCm) {
+                let grWidth = 62; let gr4Width = 65;
+
+                return [
+                    {widthCm: grWidth, lengthCm: baseHeight - gr4Width},
+                    {widthCm: grWidth, lengthCm: baseHeight - gr4Width - passWidthCm},
+                    {widthCm: grWidth, lengthCm: baseHeight - gr4Width},
+                    {widthCm: gr4Width, lengthCm: baseWidth}
+                ]
+            },
+
             widthInPixels(cm) {
                 return cm * this.cmToPixel;
             },
@@ -279,6 +291,46 @@
                 let {start, end} = point;
                 return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
             },
+            textLabel(num) {
+                return Math.floor(num);
+            },
+
+            updateConstraintSizes(grIndex, propType, delta) {
+                if (grIndex === 3 && propType === 'widthCm') {
+                    for (let checkIndex = 0; checkIndex < 3; checkIndex++) {
+                        let newSize = this.getMoveConstraintSize(checkIndex, 'lengthCm', this.gryadkiBase[checkIndex].lengthCm, delta);
+                        this.$set( this.gryadkiBase[checkIndex], 'lengthCm', newSize );
+                    }
+                }
+            },
+
+            getMoveConstraintSize(grIndex, propType, oldSize, delta) {
+                let newSize = oldSize + delta;
+                let minSize = propType === 'widthCm' ? this.minWidth : this.minLength;
+
+                let maxSize = propType === 'lengthCm'
+                    ? ( grIndex === 3 ? this.baseWidth : this.baseHeight - this.gryadkiBase[3].widthCm )
+                    : this.gryadkiBase[grIndex].widthCm + this.prWidthCm - this.minPrSizeCm;
+
+                if (grIndex === 1 && propType === 'lengthCm') {
+                    maxSize = maxSize - this.minVhSizeCm;
+                }
+
+                if (grIndex === 3 && propType === 'widthCm') {
+                    maxSize = this.baseHeight - this.minVhSizeCm - this.minLength;
+                }
+
+                if (newSize < minSize) {
+                    return minSize;
+                }
+
+                if (newSize > maxSize) {
+                    return maxSize;
+                }
+
+                return newSize;
+            },
+
             startMove(evt, grIndex, arrowType) {
                 const touch = (evt.type === "touchstart")
                 if (!touch && evt.button !== 0) return;
@@ -308,7 +360,6 @@
                     let coordType = 'x';
                     let propType = isNotSwappedLengthWidth ? 'widthCm' : 'lengthCm';
                     let baseCoord = bort.x + bort.w/2;
-                    let minSize = isNotSwappedLengthWidth ? this.minWidth : this.minHeight;
 
                     let isInverted = arrowType === 'right' || isVertical;
 
@@ -316,19 +367,17 @@
                         coordType = 'y';
                         propType = isNotSwappedLengthWidth ? 'lengthCm' : 'widthCm';
                         baseCoord = bort.y + bort.h/2;
-                        minSize = isNotSwappedLengthWidth ? this.minHeight : this.minWidth;
                     }
 
                     let delta = isInverted
                         ? newPt[coordType] - baseCoord
                         : baseCoord - newPt[coordType];
                     let deltaCm = this.widthInCm( this.pixelsToMM(delta) );
-                    let newSize = grSize[propType] + deltaCm;
-                    if (newSize < minSize) {
-                        newSize = minSize;
-                    }
+                    let newSize = this.getMoveConstraintSize(grIndex, propType, grSize[propType], deltaCm);
+                    deltaCm = newSize - grSize[propType];
 
                     this.$set( this.gryadkiBase[grIndex], propType, newSize );
+                    this.updateConstraintSizes(grIndex, propType, deltaCm);
                 }
                 const moveFn = (evt) => getPos(evt, point)
                 const stopFn = () => {
@@ -345,9 +394,12 @@
             }
         },
         computed: {
-            prWidthPx() {
+            prWidthCm() {
                 let [gr1, gr2, gr3, gr4] = this.gryadkiBase;
-                return this.widthInPixels(gr4.lengthCm - gr1.widthCm - gr2.widthCm - gr3.widthCm)/2;
+                return (gr4.lengthCm - gr1.widthCm - gr2.widthCm - gr3.widthCm)/2;
+            },
+            prWidthPx() {
+                return this.widthInPixels( this.prWidthCm );
             },
             gryadkiPx() {
                 let [gr1, gr2, gr3, gr4] = this.gryadkiBase;
@@ -386,7 +438,7 @@
                 let gryadkiPx = this.gryadkiPx;
                 let prWidthPx = this.prWidthPx;
 
-                return [
+                let borts = [
                     {
                         left: {w: bortWidthPx, h: gryadkiPx[0].length, x: gryadkiPx[0].left, y: gryadkiPx[0].top},
                         bottom: {w: gryadkiPx[0].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[0].left + bortWidthPx, y: gryadkiPx[0].top + gryadkiPx[0].length - bortWidthPx},
@@ -412,7 +464,16 @@
                         right: {w: bortWidthPx, h: gryadkiPx[3].width, x: gryadkiPx[2].left + gryadkiPx[2].width - bortWidthPx, y: gryadkiPx[3].top},
                         top: {w: gryadkiPx[1].width + 2 * prWidthPx + 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[0].left + gryadkiPx[0].width - bortWidthPx, y: gryadkiPx[3].top},
                     },
-                ]
+                ];
+
+                for (let bort of borts) {
+                    for (const type of Object.keys(bort)) {
+                        bort[type].centerX = bort[type].x + bort[type].w/2;
+                        bort[type].centerY = bort[type].y + bort[type].h/2;
+                    }
+                }
+
+                return borts;
             },
 
             grMiddlesPx() {
@@ -424,52 +485,111 @@
                     {x: br2.bottom.x + br2.bottom.w/2, y: br4.left.y+br4.left.h/2},
                 ]
             },
+            handlersPx() {
+                let bortsWithHandlers = [
+                    ['bottom', 'right'],
+                    ['left', 'bottom', 'right'],
+                    ['left', 'bottom'],
+                    ['bottomLeft', 'bottomRight'],
+                ];
+
+                let handlers = [];
+                for (const gryadkaIndex in bortsWithHandlers) {
+                    let gryadkaBortHandlers = bortsWithHandlers[gryadkaIndex];
+                    for (const bortType of gryadkaBortHandlers) {
+                        let bort = this.bortsPx[gryadkaIndex][bortType];
+                        handlers.push({
+                            x: bort.centerX,
+                            y: bort.centerY,
+                            grIndex: gryadkaIndex,
+                            position: bortType,
+                            vertical: bortType === 'left' || bortType === 'right'
+                        });
+                    }
+                }
+
+                return handlers;
+            },
             arrowsPx() {
                 let [br1, br2, br3, br4] = this.bortsPx;
                 let grMiddles = this.grMiddlesPx;
-
-                let prMiddles = [
-                    {x: br4.bottomLeft.x + br4.bottomLeft.w/2, y: br4.bottomLeft.y + br4.bottomLeft.h/2},
-                    {x: br4.bottomRight.x + br4.bottomRight.w/2, y: br4.bottomRight.y + br4.bottomRight.h/2},
-                ];
-
-                let arrowWidth = this.arrowWidthPx;
+                let shiftX = 10;
+                let shiftY = 15;
 
                 return [
                     {
-                        left: { start: {x: br1.left.x+br1.left.w/2 - arrowWidth/2, y: grMiddles[0].y}, end: {x: br1.left.x+br1.left.w/2 + arrowWidth/2, y: grMiddles[0].y} },
-                        right: { start: {x: br1.right.x+br1.right.w/2 - arrowWidth/2, y: grMiddles[0].y}, end: {x: br1.right.x+br1.right.w/2 + arrowWidth/2, y: grMiddles[0].y} },
-                        bottom: { start: {x: grMiddles[0].x, y: br1.bottom.y + br1.bottom.h/2-arrowWidth/2}, end: {x: grMiddles[0].x, y: br1.bottom.y + br1.bottom.h/2+arrowWidth/2} },
+                        start: {x: br1.left.x, y: grMiddles[0].y - shiftY},
+                        end: {x: br1.right.x+br1.right.w, y: grMiddles[0].y - shiftY},
+                        text: this.textLabel( this.gryadkiBase[0].widthCm ),
+                        textPosition: 'top'
                     },
                     {
-                        left: { start: {x: br2.left.x+br2.left.w/2 - arrowWidth/2, y: grMiddles[1].y}, end: {x: br2.left.x+br2.left.w/2 + arrowWidth/2, y: grMiddles[1].y} },
-                        right: { start: {x: br2.right.x+br2.right.w/2 - arrowWidth/2, y: grMiddles[1].y}, end: {x: br2.right.x+br2.right.w/2 + arrowWidth/2, y: grMiddles[1].y} },
-                        bottom: { start: {x: grMiddles[1].x, y: br2.bottom.y + br2.bottom.h/2-arrowWidth/2}, end: {x: grMiddles[1].x, y: br2.bottom.y + br2.bottom.h/2+arrowWidth/2} },
+                        start: {x: br1.left.x + shiftX, y: br1.bottom.y + br1.bottom.h},
+                        end: {x: br1.left.x + shiftX, y: br1.left.y},
+                        text: this.textLabel( this.gryadkiBase[0].lengthCm ),
+                        textPosition: 'right'
+                    },
+
+                    {
+                        start: {x: br2.left.x, y: grMiddles[1].y - shiftY},
+                        end: {x: br2.right.x+br2.right.w, y: grMiddles[1].y - shiftY},
+                        text: this.textLabel( this.gryadkiBase[1].widthCm ),
+                        textPosition: 'top'
                     },
                     {
-                        left: { start: {x: br3.left.x+br3.left.w/2 - arrowWidth/2, y: grMiddles[2].y}, end: {x: br3.left.x+br3.left.w/2 + arrowWidth/2, y: grMiddles[2].y} },
-                        right: { start: {x: br3.right.x+br3.right.w/2 - arrowWidth/2, y: grMiddles[2].y}, end: {x: br3.right.x+br3.right.w/2 + arrowWidth/2, y: grMiddles[2].y} },
-                        bottom: { start: {x: grMiddles[2].x, y: br3.bottom.y + br3.bottom.h/2-arrowWidth/2}, end: {x: grMiddles[2].x, y: br3.bottom.y + br3.bottom.h/2+arrowWidth/2} },
+                        start: {x: br2.left.x + shiftX, y: br2.bottom.y + br2.bottom.h},
+                        end: {x: br2.left.x + shiftX, y: br2.left.y},
+                        text: this.textLabel( this.gryadkiBase[1].lengthCm ),
+                        textPosition: 'right'
+                    },
+
+                    {
+                        start: {x: br3.left.x, y: grMiddles[2].y - shiftY},
+                        end: {x: br3.right.x+br3.right.w, y: grMiddles[2].y - shiftY},
+                        text: this.textLabel( this.gryadkiBase[2].widthCm ),
+                        textPosition: 'top'
                     },
                     {
-                        bottomLeft: { start: {x: prMiddles[0].x, y: prMiddles[0].y-arrowWidth/2}, end: {x: prMiddles[0].x, y: prMiddles[0].y+arrowWidth/2} },
-                        bottomRight: { start: {x: prMiddles[1].x, y: prMiddles[1].y-arrowWidth/2}, end: {x: prMiddles[1].x, y: prMiddles[1].y+arrowWidth/2} },
-                    }
+                        start: {x: br3.right.x  + br3.right.w - shiftX, y: br3.bottom.y + br3.bottom.h},
+                        end: {x: br3.right.x  + br3.right.w - shiftX, y: br3.right.y},
+                        text: this.textLabel( this.gryadkiBase[2].lengthCm ),
+                        textPosition: 'left'
+                    },
+
+                    {
+                        start: {x: br2.left.x + shiftX, y: br4.bottomLeft.y + br4.bottomLeft.h},
+                        end: {x: br2.left.x + shiftX, y: br4.top.y},
+                        text: this.textLabel( this.gryadkiBase[3].widthCm ),
+                        textPosition: 'left'
+                    },
+                    {
+                        start: {x: br1.left.x, y: br4.left.y + shiftX},
+                        end: {x: br3.right.x+br3.right.w, y: br4.left.y + shiftX},
+                        text: this.textLabel( this.gryadkiBase[3].lengthCm ),
+                        textPosition: 'bottom'
+                    },
+
+
+                    {
+                        start: {x: br1.right.x + br1.right.w, y: grMiddles[1].y - shiftY},
+                        end: {x: br2.left.x, y: grMiddles[1].y - shiftY},
+                        text: this.textLabel( this.prWidthCm ),
+                        textPosition: 'top'
+                    },
+                    {
+                        start: {x: br2.right.x + br2.right.w, y: grMiddles[1].y - shiftY},
+                        end: {x: br3.left.x, y: grMiddles[1].y - shiftY},
+                        text: this.textLabel( this.prWidthCm ),
+                        textPosition: 'top'
+                    },
+                    {
+                        start: {x: br2.left.x + shiftX, y: br2.bottom.y + br2.bottom.h},
+                        end: {x: br2.left.x + shiftX, y: this.topStartPx + this.widthInPixels(this.baseHeight)},
+                        text: this.textLabel( this.baseHeight - this.gryadkiBase[1].lengthCm - this.gryadkiBase[3].widthCm),
+                        textPosition: 'right'
+                    },
                 ];
             },
-            arrowsD() {
-                return this.arrowsPx.map( grArrows => {
-                    let arrowTypes = Object.keys(grArrows);
-                    let arrowsD = {};
-
-                    arrowTypes.forEach(arrowType => {
-                        arrowsD[arrowType] = this.pointToPath( grArrows[arrowType] );
-                    });
-
-                    return arrowsD;
-                });
-            },
-
             supportPx() {
                 let br4 = this.bortsPx[3];
 
@@ -485,15 +605,6 @@
                 return this.supportPx.map( this.pointToPath );
             },
 
-            widthTitles() {
-                return [1, 2, 3, 4].map( num => 'Ширина '+num );
-            },
-            lengthTitles() {
-                return ['Длина 1', 'Проход', 'Длина 3'];
-            },
-            widthTexts() {
-                return this.gryadkiBase.map( (gryadka, index) => Math.round( index < 4 ? gryadka.widthCm : gryadka.lengthCm ).toString() );
-            },
             lowestY() {
                 let borts = this.bortsPx;
                 return Math.max(
@@ -501,79 +612,6 @@
                     borts[1].bottom.y+borts[1].bottom.h,
                     borts[2].bottom.y+borts[2].bottom.h
                 );
-            },
-            lowestCm() {
-                return Math.max(
-                    this.gryadkiBase[0].lengthCm,
-                    this.gryadkiBase[1].lengthCm,
-                    this.gryadkiBase[2].lengthCm,
-                )
-            },
-            lengthTexts() {
-                let lengths = this.gryadkiBase.map( (gryadka, index) => Math.round( index < 4 ? gryadka.lengthCm : gryadka.widthCm ).toString() );
-                let prSizeCm = this.lowestCm - this.gryadkiBase[1].lengthCm;
-                lengths[1] = Math.round(prSizeCm).toString();
-
-                return lengths;
-            },
-            textPositions() {
-                let grMiddles = this.grMiddlesPx;
-                let borts = this.bortsPx;
-
-                let widthTitleSizes = this.widthTitles.map( title => this.textLength(title, this.titleTextSizePx) );
-                let lengthTitleSizes = this.lengthTitles.map( title => this.textLength(title, this.titleTextSizePx) );
-                let widthTextSizes = this.widthTexts.map( text => this.textLength(text, this.numbersTextSizePx) );
-                let lengthTextSizes = this.lengthTexts.map( text => this.textLength(text, this.numbersTextSizePx) );
-
-                let textPaddingPx = 0;
-                let arrowPaddingPx = 2;
-                let arrowWidth = this.arrowWidthPx;
-
-                let textYShift = arrowPaddingPx;
-                let titleYShift = textYShift + textPaddingPx + this.textHeight(this.numbersTextSizePx);
-                let allTextHeight = this.textHeight(this.numbersTextSizePx) + this.textHeight(this.titleTextSizePx);
-
-                let lowestY = this.lowestY;
-
-                return {
-                    width: [
-                        {
-                            title: {x: grMiddles[0].x - widthTitleSizes[0]/2, y: grMiddles[0].y - titleYShift},
-                            text: {x: grMiddles[0].x - widthTextSizes[0]/2 , y: grMiddles[0].y - textYShift}
-                        },
-                        {
-                            title: {x: grMiddles[1].x - widthTitleSizes[1]/2, y: grMiddles[1].y - titleYShift},
-                            text: {x: grMiddles[1].x - widthTextSizes[1]/2 , y: grMiddles[1].y - textYShift}
-                        },
-                        {
-                            title: {x: grMiddles[2].x - widthTitleSizes[2]/2, y: grMiddles[2].y - titleYShift},
-                            text: {x: grMiddles[2].x - widthTextSizes[2]/2 , y: grMiddles[2].y - textYShift}
-                        },
-                        {
-                            title: {x: grMiddles[3].x - widthTitleSizes[3]/2, y: grMiddles[3].y - titleYShift + allTextHeight/2},
-                            text: {x: grMiddles[3].x - widthTextSizes[3]/2 , y: grMiddles[3].y - textYShift + allTextHeight/2}
-                        },
-                    ],
-                    length: [
-                        {
-                            title: {x: grMiddles[0].x - lengthTitleSizes[0]/2, y: borts[0].bottom.y - arrowWidth/2 - titleYShift},
-                            text: {x: grMiddles[0].x - lengthTextSizes[0]/2 , y: borts[0].bottom.y - arrowWidth/2 - textYShift}
-                        },
-                        {
-                            title: {x: grMiddles[1].x - lengthTitleSizes[1]/2, y: lowestY - titleYShift},
-                            text: {x: grMiddles[1].x - lengthTextSizes[1]/2 , y: lowestY - textYShift}
-                        },
-                        {
-                            title: {x: grMiddles[2].x - lengthTitleSizes[2]/2, y: borts[2].bottom.y - arrowWidth/2 - titleYShift},
-                            text: {x: grMiddles[2].x - lengthTextSizes[2]/2 , y: borts[2].bottom.y - arrowWidth/2 - textYShift}
-                        },
-                        {
-                            title: {x: 0, y: 0},
-                            text: {x: 0, y: 0}
-                        }
-                    ]
-                }
-
             },
         }
     }
@@ -584,39 +622,27 @@
         user-select: none;
     }
 
-    [id*="arrow"] {
+    .movable {
         cursor: move;
-        fill:none;
-        fill-rule:evenodd;
-        stroke:#da3a3a;
-        stroke-width:0.465;
-        stroke-linecap:butt;
-        stroke-linejoin:miter;
-        stroke-miterlimit:4;
-        stroke-dasharray:none;
-        stroke-opacity:1;
-        marker-start:url(#ArrowStartVertical);
-        marker-end:url(#ArrowEndVertical);
-    }
-
-    [id*="bottom_arrow"] {
-        marker-start:url(#ArrowStartHorizontal);
-        marker-end:url(#ArrowEndHorizontal);
     }
 
     [id*="bort"] {
-        opacity:1;
-        fill:none;
-        fill-opacity:1;
-        stroke:#000000;
-        stroke-width:0.26499999;
-        stroke-linecap:butt;
-        stroke-linejoin:miter;
-        stroke-miterlimit:4;
-        stroke-dasharray:none;
-        stroke-dashoffset:0;
-        stroke-opacity:1;
-        paint-order:normal;
+        opacity: 1;
+        fill: white;
+        fill-opacity: 1;
+        stroke: #000000;
+        stroke-width: 0.26499999;
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+        stroke-miterlimit: 4;
+        stroke-dasharray: none;
+        stroke-dashoffset: 0;
+        stroke-opacity: 1;
+        paint-order: normal;
+    }
+
+    .handler:hover, .handler.active {
+        fill: rgba(0, 255, 0, 0.3);
     }
 
     [id*="title"] {
@@ -654,16 +680,16 @@
     }
 
     [id*="support"] {
-        fill:none;
-        fill-rule:evenodd;
-        stroke:#000000;
-        stroke-width:0.26458332;
-        stroke-linecap:butt;
-        stroke-linejoin:miter;
-        stroke-miterlimit:4;
-        stroke-dasharray:0.52916663, 0.52916663;
-        stroke-dashoffset:0;
-        stroke-opacity:1;
+        fill: none;
+        fill-rule: evenodd;
+        stroke: #000000;
+        stroke-width: 0.26458332;
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+        stroke-miterlimit: 4;
+        stroke-dasharray: 0.52916663, 0.52916663;
+        stroke-dashoffset: 0;
+        stroke-opacity: 1;
     }
 
 </style>

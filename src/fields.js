@@ -161,10 +161,10 @@ export default {
             title: 'Размер теплицы',
             type: 'radio',
             values: [
-                {value: '3x4', title: 'Теплица 3x4 м'},
-                {value: '3x6', title: 'Теплица 3x6 м'},
-                {value: '3x8', title: 'Теплица 3x8 м'},
-                {value: '3x10', title: 'Теплица 3x10 м'},
+                {value: '3x4', title: 'Теплица 3 x 4 м'},
+                {value: '3x6', title: 'Теплица 3 x 6 м'},
+                {value: '3x8', title: 'Теплица 3 x 8 м'},
+                {value: '3x10', title: 'Теплица 3 x 10 м'},
             ]
         },
         {
