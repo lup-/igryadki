@@ -1,5 +1,5 @@
 <template>
-    <div class="scheme-sh m-4">
+    <div class="scheme-sh">
         <svg
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:cc="http://creativecommons.org/ns#"
@@ -9,69 +9,24 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
                 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-                width="210.8434mm"
-                height="220.04291mm"
-                viewBox="0 0 210.8434 220.04291"
-                version="1.1"
-                id="svg8"
-                sodipodi:docname="gryadka-Sh.svg"
+                :width="fullWidthPx+'mm'"
+                :height="fullHeightPx+'mm'"
+                :viewBox="[0, 0, fullWidthPx, fullHeightPx].join(' ')"
         >
-            <sodipodi:namedview
-                    id="base"
-                    pagecolor="#ffffff"
-                    bordercolor="#666666"
-                    borderopacity="1.0"
-                    inkscape:pageopacity="0.0"
-                    inkscape:pageshadow="2"
-                    inkscape:zoom="1.4142136"
-                    inkscape:cx="381.62887"
-                    inkscape:cy="179.76958"
-                    inkscape:document-units="mm"
-                    inkscape:current-layer="layer1"
-                    showgrid="false"
-                    inkscape:object-paths="false"
-                    showguides="true"
-                    inkscape:guide-bbox="true"
-                    fit-margin-top="0"
-                    fit-margin-left="0"
-                    fit-margin-right="0"
-                    fit-margin-bottom="0"
-                    inkscape:window-width="1848"
-                    inkscape:window-height="1016"
-                    inkscape:window-x="72"
-                    inkscape:window-y="27"
-                    inkscape:window-maximized="1"
-                    inkscape:snap-midpoints="true"
-                    inkscape:snap-intersection-paths="true">
-                <sodipodi:guide
-                        position="29.934187,-8.9802558"
-                        orientation="1,0"
-                        id="guide8362"
-                        inkscape:locked="false" />
-                <sodipodi:guide
-                        position="179.9793,-23.198994"
-                        orientation="1,0"
-                        id="guide8366"
-                        inkscape:locked="false" />
-                <sodipodi:guide
-                        position="46.023813,29.934186"
-                        orientation="0,1"
-                        id="guide8395"
-                        inkscape:locked="false" />
-            </sodipodi:namedview>
-            <metadata
-                    id="metadata5">
-                <rdf:RDF>
-                    <cc:Work
-                            rdf:about="">
-                        <dc:format>image/svg+xml</dc:format>
-                        <dc:type
-                                rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-                        <dc:title />
-                    </cc:Work>
-                </rdf:RDF>
-            </metadata>
             <g>
+                <rect id="teplica"
+                    :x="0"
+                    :y="0"
+                    :width="fullWidthPx"
+                    :height="fullHeightPx"
+                />
+                <rect id="teplica-inner"
+                    :x="leftStartPx"
+                    :y="topStartPx"
+                    :width="baseWidthPx"
+                    :height="baseHeightPx"
+                />
+
                 <rect id="g1_top_bort" :width="bortsPx[0]['top'].w" :height="bortsPx[0]['top'].h" :x="bortsPx[0]['top'].x" :y="bortsPx[0]['top'].y"/>
                 <rect id="g1_left_bort" :width="bortsPx[0]['left'].w" :height="bortsPx[0]['left'].h" :x="bortsPx[0]['left'].x" :y="bortsPx[0]['left'].y"/>
                 <rect id="g1_bottom_bort" class="handler movable"
@@ -168,9 +123,9 @@
                 ></arrow>
 
                 <handler v-for="handler in handlersPx" :key="handler.grIndex+handler.position"
-                        :center-x="handler.x"
-                        :center-y="handler.y"
-                        :vertical="handler.vertical"
+                    :center-x="handler.x"
+                    :center-y="handler.y"
+                    :vertical="handler.vertical"
                 ></handler>
 
                 <path v-for="(support, index) in supportD" :d="support" :id="'gx_support_'+index" :key="'gx_support_'+index" />
@@ -195,7 +150,7 @@
 
     export default {
         name: "TeplicaSh",
-        props: ['baseWidth', 'baseHeight'],
+        props: ['baseWidth', 'baseHeight', 'fullWidth', 'fullHeight', 'supports', 'value'],
         components: {Handler, Arrow},
         data() {
             //Все размеры внешние, т.е. содержат ширину бортов
@@ -219,24 +174,24 @@
                 bortCmToPixel,
                 minWidth: 50,
                 minLength: 100,
-                titleTextSizePx: 4.93888903,
-                numbersTextSizePx: 10.58333302,
                 bortWidthCm,
                 passWidthCm,
                 minPrSizeCm,
                 minVhSizeCm,
-                arrowWidthPx: 21.94932,
-                leftStartPx: 0.26499999,
-                topStartPx: 0.26499999,
-                gryadkiBase: this.getBaseSizes(this.baseWidth, this.baseHeight, bortWidthCm, passWidthCm),
+                gryadkiBase: this.value || this.getBaseSizes(this.baseWidth, this.baseHeight, bortWidthCm, passWidthCm),
             }
+        },
+        mounted() {
+            this.emitSizeUpdates();
         },
         watch: {
             baseWidth() {
                 this.gryadkiBase = this.getBaseSizes(this.baseWidth, this.baseHeight, this.bortWidthCm, this.passWidthCm);
+                this.emitSizeUpdates();
             },
             baseHeight() {
                 this.gryadkiBase = this.getBaseSizes(this.baseWidth, this.baseHeight, this.bortWidthCm, this.passWidthCm);
+                this.emitSizeUpdates();
             }
         },
         methods: {
@@ -260,10 +215,6 @@
             bortWidthInPixels(cm) {
                 return cm * this.bortCmToPixel;
             },
-            textLength(text, fontSize) {
-                let magicLetterLengthInPx = fontSize * 2.5;
-                return this.pixelsToMM( text.length * magicLetterLengthInPx );
-            },
             pixelsToInches(px) {
                 return px * (1/96);
             },
@@ -280,13 +231,6 @@
                 //82.96 px = 21.94932 mm
                 return this.inchesToMM( this.pixelsToInches(px) );
             },
-            mmToPixels(mm) {
-                return this.inchesToPixels( this.mmToInches(mm) );
-            },
-            textHeight(px) {
-                let magicCoeff = 3.5;
-                return this.pixelsToMM(px) * magicCoeff;
-            },
             pointToPath(point) {
                 let {start, end} = point;
                 return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
@@ -295,11 +239,19 @@
                 return Math.floor(num);
             },
 
+            emitSizeUpdates() {
+                this.$emit('input', this.gryadkiBase);
+            },
+
             updateConstraintSizes(grIndex, propType, delta) {
                 if (grIndex === 3 && propType === 'widthCm') {
                     for (let checkIndex = 0; checkIndex < 3; checkIndex++) {
-                        let newSize = this.getMoveConstraintSize(checkIndex, 'lengthCm', this.gryadkiBase[checkIndex].lengthCm, delta);
-                        this.$set( this.gryadkiBase[checkIndex], 'lengthCm', newSize );
+                        let oldSize = this.gryadkiBase[checkIndex].lengthCm;
+                        let newSize = this.getMoveConstraintSize(checkIndex, 'lengthCm', oldSize, delta);
+
+                        if (newSize < oldSize + delta) {
+                            this.$set(this.gryadkiBase[checkIndex], 'lengthCm', newSize);
+                        }
                     }
                 }
             },
@@ -353,7 +305,9 @@
                 const updateFn = () => {
                     let isNotSwappedLengthWidth = grIndex !== 3;
                     let isVertical = ['bottom', 'bottomLeft', 'bottomRight'].indexOf(arrowType) !== -1;
-                    if (moving) requestAnimationFrame(updateFn);
+                    if (moving) {
+                        requestAnimationFrame(updateFn);
+                    }
 
                     let bort = this.bortsPx[grIndex][arrowType];
                     newPt = point.matrixTransform(transform);
@@ -378,6 +332,7 @@
 
                     this.$set( this.gryadkiBase[grIndex], propType, newSize );
                     this.updateConstraintSizes(grIndex, propType, deltaCm);
+                    this.emitSizeUpdates();
                 }
                 const moveFn = (evt) => getPos(evt, point)
                 const stopFn = () => {
@@ -394,6 +349,25 @@
             }
         },
         computed: {
+            fullWidthPx() {
+                return this.widthInPixels( this.fullWidth );
+            },
+            fullHeightPx() {
+                return this.widthInPixels( this.fullHeight );
+            },
+            baseWidthPx() {
+                return this.widthInPixels( this.baseWidth );
+            },
+            baseHeightPx() {
+                return this.widthInPixels( this.baseHeight );
+            },
+            leftStartPx() {
+                return this.widthInPixels( (this.fullWidth - this.baseWidth)/2 );
+            },
+            topStartPx() {
+                return this.widthInPixels( (this.fullHeight - this.baseHeight)/2 );
+            },
+
             prWidthCm() {
                 let [gr1, gr2, gr3, gr4] = this.gryadkiBase;
                 return (gr4.lengthCm - gr1.widthCm - gr2.widthCm - gr3.widthCm)/2;
@@ -593,13 +567,32 @@
             supportPx() {
                 let br4 = this.bortsPx[3];
 
-                return [
+                let baseSupports = [
                     {start: {x: br4.left.x + br4.left.w, y: br4.bottomLeft.y + br4.bottomLeft.h}, end: {x: br4.bottomLeft.x, y: br4.bottomLeft.y + br4.bottomLeft.h}},
                     {start: {x: br4.bottomLeft.x + br4.bottomLeft.w, y: br4.bottomLeft.y + br4.bottomLeft.h}, end: {x: br4.bottomRight.x, y: br4.bottomLeft.y + br4.bottomLeft.h}},
                     {start: {x: br4.bottomRight.x + br4.bottomRight.w, y: br4.bottomRight.y + br4.bottomRight.h}, end: {x: br4.right.x, y: br4.bottomRight.y + br4.bottomRight.h}},
                     {start: {x: br4.bottomLeft.x, y: br4.bottomLeft.y}, end: {x: br4.bottomLeft.x, y: br4.top.y + br4.top.h}},
                     {start: {x: br4.bottomRight.x + br4.bottomRight.w, y: br4.bottomRight.y}, end: {x: br4.bottomRight.x + br4.bottomRight.w, y: br4.top.y + br4.top.h}},
-                ]
+                ];
+
+                let extraSupports = [];
+                for (const grIndex in this.supports) {
+                    let supportCount = this.supports[grIndex];
+                    let supportGapCm = this.gryadkiBase[grIndex].lengthCm / (supportCount + 1);
+                    let supportGapPx = this.widthInPixels(supportGapCm);
+                    let grBorts = this.bortsPx[grIndex];
+                    let grTopPx = grBorts.left.y;
+
+                    for (let supportIndex = 0; supportIndex < supportCount; supportIndex++ ) {
+                        extraSupports.push({
+                            start: {x: grBorts.left.x + grBorts.left.w, y: grTopPx + supportGapPx * (supportIndex + 1)},
+                            end: {x: grBorts.right.x, y: grTopPx + supportGapPx * (supportIndex + 1)}
+                        });
+                    }
+
+                }
+
+                return baseSupports.concat(extraSupports);
             },
             supportD() {
                 return this.supportPx.map( this.pointToPath );
@@ -620,10 +613,39 @@
 <style scoped>
     svg {
         user-select: none;
+        width: 100%;
+        max-width: 700px;
+        height: auto;
+        max-height: 90vh;
+        margin: 0;
     }
 
     .movable {
         cursor: move;
+    }
+
+    #teplica {
+        opacity: 1;
+        fill: #000000;
+        fill-opacity: 0.3;
+        stroke: #000000;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        stroke-dasharray: none;
+        stroke-dashoffset: 0;
+        stroke-opacity: 0.4;
+    }
+
+    #teplica-inner {
+        opacity: 1;
+        fill: #ffffff;
+        fill-opacity: 1;
+        stroke: #000000;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        stroke-dasharray: none;
+        stroke-dashoffset: 0;
+        stroke-opacity: 0.4;
     }
 
     [id*="bort"] {

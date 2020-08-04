@@ -157,17 +157,6 @@ export default {
     ],
     teplica: [
         {
-            code: 'teplica',
-            title: 'Размер теплицы',
-            type: 'radio',
-            values: [
-                {value: '3x4', title: 'Теплица 3 x 4 м'},
-                {value: '3x6', title: 'Теплица 3 x 6 м'},
-                {value: '3x8', title: 'Теплица 3 x 8 м'},
-                {value: '3x10', title: 'Теплица 3 x 10 м'},
-            ]
-        },
-        {
             code: 'form',
             title: 'Форма грядок',
             type: 'radio',
@@ -176,6 +165,17 @@ export default {
                 {value: 'Ш', title: false, image: 'https://static-ru.insales.ru/files/1/335/9912655/original/igryadki-v-teplicu-I-I-I.PNG'},
                 {value: 'II', title: false, image: 'https://static-ru.insales.ru/files/1/333/9912653/original/igryadki-v-teplicu-II.PNG'},
                 {value: 'IiI', title: false, image: 'https://static-ru.insales.ru/files/1/334/9912654/original/igryadki-v-teplicu-IiI.PNG'},
+            ]
+        },
+        {
+            code: 'teplica',
+            title: 'Размер теплицы',
+            type: 'radio',
+            values: [
+                {value: '3x4', title: 'Теплица 3 x 4 м'},
+                {value: '3x6', title: 'Теплица 3 x 6 м'},
+                {value: '3x8', title: 'Теплица 3 x 8 м'},
+                {value: '3x10', title: 'Теплица 3 x 10 м'},
             ]
         },
         {

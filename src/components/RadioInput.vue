@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex">
+    <div class="d-flex flex-wrap">
         <div class="btn-group radio-group" role="group">
             <label class="btn" v-for="variant in values" :key="variant.code"
                     :class="{'btn-outline-primary': !isSelected(variant), 'btn-primary': isSelected(variant)}"
@@ -20,6 +20,11 @@
         data() {
             return {
                 selected: this.value
+            }
+        },
+        watch: {
+            value() {
+                this.selected = this.value;
             }
         },
         methods: {

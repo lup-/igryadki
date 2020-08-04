@@ -1,6 +1,6 @@
 <template>
     <b-container class="p-2">
-        <b-row class="calc-header mb-4 ml-0 mr-2 py-2">
+        <b-row class="calc-header m-0 mb-4 p-2" no-gutters>
             <b-col cols="12" sm="6">
                 <label>Артикул: <span class="sku">{{sku || '-'}}</span></label>
             </b-col>
@@ -14,8 +14,8 @@
         </b-row>
 
         <b-tabs pills fill v-model="tabIndex">
-            <b-tab v-for="type in types" :key="type.code"
-                    title-item-class="mr-2 mb-4"
+            <b-tab v-for="(type, index) in types" :key="type.code"
+                    :title-item-class="index === types.length - 1 ? 'mb-4' : 'mr-2 mb-4'"
                     :title="type.title"
             >
                 <order-form :fields="formFields[type.code]" :form-type="type.code" v-model="orderData[type.code]" @cart="addToCart"></order-form>

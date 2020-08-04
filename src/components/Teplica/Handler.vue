@@ -51,6 +51,9 @@
 </script>
 
 <style scoped>
+    .handler {
+        pointer-events: none;
+    }
     .handler path {
         fill: none;
         fill-rule: evenodd;
