@@ -2,12 +2,12 @@
     <b-container class="p-2">
         <b-row class="calc-header m-0 mb-4 p-2" no-gutters>
             <b-col cols="12" sm="6">
-                <label>Артикул: <span class="sku">{{sku || '-'}}</span></label>
+                <label>Артикул: <span class="sku">{{printSku || '-'}}</span></label>
             </b-col>
             <b-col cols="12" sm="6" class="text-sm-right sticky-price">
                 <h4>
                     Цена:
-                    <span class="calc-price">{{price || '-'}}</span>
+                    <span class="calc-price">{{printPrice || '-'}}</span>
                     <span>&#8381;</span>
                 </h4>
             </b-col>
@@ -18,7 +18,13 @@
                     :title-item-class="index === types.length - 1 ? 'mb-4' : 'mr-2 mb-4'"
                     :title="type.title"
             >
-                <order-form :fields="formFields[type.code]" :form-type="type.code" v-model="orderData[type.code]" @cart="addToCart"></order-form>
+                <order-form
+                        :fields="formFields[type.code]"
+                        :form-type="type.code"
+                        v-model="orderData[type.code]"
+                        @cart="addToCart"
+                        @customCart="addCustomTeplicaToCart"
+                ></order-form>
             </b-tab>
         </b-tabs>
 
@@ -40,6 +46,7 @@
 
     import OrderForm from "./components/OrderForm";
     import formFields from "./fields";
+    import colors from "./colors";
 
     export default {
         name: 'Calc',
@@ -79,6 +86,119 @@
                         items: items
                     });
                 }
+            },
+            async addCustomTeplicaToCart(gryadkiSizes, supportCount, teplSizes, fields) {
+                let variant = await this.addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields);
+                await this.loadProducts();
+                let cartApi = window.Cart;
+                if (variant && fields.quantity && cartApi) {
+                    let items = {};
+                    items[variant.id] = fields.quantity;
+                    cartApi.add({
+                        items: items
+                    });
+                }
+            },
+            getOptionValues(gryadkiSizes, supportCount, teplSizes, fields) {
+                return [
+                    fields.bort.toString(), //Высота
+                    fields.teplica, //Размер теплицы
+                    this.getColorTitle(fields.color), //Цвет
+                    fields.type === 'hard' ? "Да" : "Нет", //Усиленные
+                    this.getTeplParams(gryadkiSizes, supportCount, teplSizes), ////Параметры теплицы
+                ]
+            },
+            getColorTitle(value) {
+                if (!value) {
+                    return 'Цинк';
+                }
+
+                let color = colors.find( color => color.code === value );
+                return color ? color.title : 'Цинк';
+            },
+            getTeplParams(gryadkiSizes, supportCount, teplSizes) {
+                let sizeStrings = gryadkiSizes.map((size, index) => {
+                    let sizeString = `${size.widthCm}x${size.lengthCm}`;
+                    if (index < 3) {
+                        sizeString += `-${supportCount[index]}`;
+                    }
+
+                    return sizeString;
+                });
+
+                return `${teplSizes[0]}x${teplSizes[1]}|${sizeStrings.join('|')}`;
+            },
+            getTeplicaSizes(fields) {
+                let [wT, hT] = fields.teplica.split('x');
+                return {
+                    width: parseInt(wT) * 100,
+                    height: parseInt(hT) * 100,
+                }
+            },
+            getCustomSku(fields) {
+                if (!fields.teplica || !fields.form || !fields.bort) {
+                    return false;
+                }
+
+                let skuBases = {
+                    'П': '550000',
+                    'Ш': '560000',
+                    'II': '570000',
+                    'IiI': '580000',
+                }
+
+                let {width, height} = this.getTeplicaSizes(fields);
+                let skuBase = skuBases[ fields.form ];
+                return `${skuBase}-${fields.bort}${width}${height}`;
+            },
+            getCustomPrice(teplSizes, supportCount, fields) {
+                let basePrice = this.price;
+                let {width, height} = this.getTeplicaSizes(fields);
+                let [customWidth, customHeight] = teplSizes;
+                let baseArea = width * height;
+                let customArea = customWidth * customHeight;
+
+                let customPrice = parseFloat( (basePrice / baseArea * customArea).toFixed(2) );
+
+                return customPrice;
+            },
+            async addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields) {
+                let productIds = {
+                    'П': 201222310,
+                    'Ш': 201223080,
+                    'II': 201221504,
+                    'IiI': 201220779,
+                }
+
+                let customProductId = productIds[ fields.form ];
+
+                let addVariantUrl = `${this.apiHostName}/admin/products/${customProductId}/variants.json`;
+                let optionValues = this.getOptionValues(gryadkiSizes, supportCount, teplSizes, fields);
+                let variantTitle = optionValues.join(' / ');
+
+                let productVariant = {
+                    "title": variantTitle,
+                    "product_id": customProductId,
+                    "sku": this.getCustomSku(fields),
+                    "price": this.getCustomPrice(teplSizes, supportCount, fields),
+                    "quantity": fields.quantity,
+                    "options": [
+                        {"option_name_id": 1521697, "value": optionValues[0]}, //Высота
+                        {"option_name_id": 1521705, "value": optionValues[1]}, //Размер теплицы
+                        {"option_name_id": 1522016, "value": optionValues[2]}, //Цвет
+                        {"option_name_id": 1535115, "value": optionValues[3]}, //Усиленные
+                        {"option_name_id": 1966495, "value": optionValues[4]}, //Параметры теплицы
+                    ]
+                }
+
+                let response = await axios.post(addVariantUrl, {variant: productVariant}, {
+                    auth: {
+                        username: 'igryadki@gmail.com',
+                        password: 'HCZwa3al2'
+                    }
+                });
+
+                return response.data;
             },
 
             async loadProducts() {
@@ -126,6 +246,21 @@
         computed: {
             formData() {
                 return this.orderData[this.tabCode];
+            },
+            apiHostName() {
+                let isDev = location.hostname === 'localhost';
+                let isProd = location.hostname === 'igryadki.ru';
+                let isStaging = !isDev && !isProd;
+
+                if (isDev) {
+                    return 'http://localhost:8081/';
+                }
+
+                if (isStaging) {
+                    return 'http://igryadki.humanistic.tech:8081/'
+                }
+
+                return 'https://igryadki.ru/';
             },
             skuIndex() {
                 return this.allProducts.reduce(function (skus, product) {
@@ -220,6 +355,11 @@
                     return false;
                 }
             },
+            printSku() {
+                return this.formData.custom
+                    ? this.getCustomSku(this.formData)
+                    : this.sku;
+            },
             price() {
                 let isProductsLoaded = this.allProducts.length > 0;
                 if (!isProductsLoaded) {
@@ -230,6 +370,11 @@
                 let quantity = this.formData['quantity'];
 
                 return variant ? variant.price * quantity: false;
+            },
+            printPrice() {
+                return this.formData.custom
+                    ? this.getCustomPrice( this.formData.teplSizes, this.formData.supports, this.formData )
+                    : this.price;
             },
             tabCode() {
                 return this.types[this.tabIndex].code;

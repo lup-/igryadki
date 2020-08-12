@@ -39,7 +39,7 @@
                         <b-col cols="12" sm="2"><label class="col-form-label">Длина</label></b-col>
                         <b-col cols="12" sm="10">
                             <div role="group">
-                                <int-input v-model="teplSizes['Ш'][1]" :min="minHeight" :max="teplicaSize.height - foundationDelta"></int-input>
+                                <int-input v-model="teplSizes['Ш'][1]" :min="minHeight" :max="1000 - foundationDelta"></int-input>
                                 <b-form-text>от {{ minHeight }} до {{ teplicaSize.height - foundationDelta }} см</b-form-text>
                             </div>
                         </b-col>
@@ -83,7 +83,7 @@
             </b-col>
         </b-form-row>
         <b-form-row class="my-4">
-            <b-button variant="primary" size="lg" block :disabled="!formIsFilled" @click="$emit('cart', values)">В корзину</b-button>
+            <b-button variant="primary" size="lg" block :disabled="!formIsFilled" @click="addToCart">В корзину</b-button>
         </b-form-row>
     </b-form>
 </template>
@@ -94,6 +94,10 @@
     import IntInput from "./IntInput";
 
     import TeplicaSh from "./Teplica/Sh";
+
+    function clone(obj) {
+        return JSON.parse( JSON.stringify(obj) );
+    }
 
     export default {
         name: "OrderForm",
@@ -112,6 +116,7 @@
             return {
                 showCustomSize: false,
                 customSize: false,
+                skipTeplSizeUpdate: false,
                 teplSizes: {'Ш': [290, 390]},
                 values,
                 minWidth: 230,
@@ -128,7 +133,13 @@
             values: {
                 deep: true,
                 handler() {
-                    this.$emit('input', this.values);
+                    this.sendDataChanges();
+                }
+            },
+            supports: {
+                deep: true,
+                handler() {
+                    this.sendDataChanges();
                 }
             },
             'values.teplica': {
@@ -136,12 +147,54 @@
                     this.updateTeplSizes();
                 }
             },
+            teplSizes: {
+                deep: true,
+                handler() {
+                    let maxHeight = this.teplicaSize.height - this.foundationDelta;
+                    let enteredHeight = this.teplSizes['Ш'][1];
+                    if ( enteredHeight > maxHeight ) {
+                        let teplicaField = this.fields.find( field => field.code === 'teplica' );
+                        if (teplicaField) {
+                            let nextSize = teplicaField.values.find(value => {
+                                let {height} = this.getTeplicaWidhtHeightByCode(value.value);
+                                return height - this.foundationDelta >= enteredHeight;
+                            });
+
+                            if (nextSize) {
+                                this.skipTeplSizeUpdate = true;
+                                this.$set(this.values, 'teplica', nextSize.value);
+                            }
+                        }
+                    }
+
+                    this.sendDataChanges();
+                }
+            },
             foundationCode() {
                 this.updateTeplSizes();
+                this.sendDataChanges();
+            },
+            showCustomSize() {
+                this.sendDataChanges();
             }
-
         },
         methods: {
+            sendDataChanges() {
+                let sendValues = clone(this.values);
+
+                if (this.showCustomSize) {
+                    let teplSizes = this.teplSizes[ sendValues.form ];
+
+                    sendValues = Object.assign(sendValues, {
+                        custom: true,
+                        customSize: this.customSize,
+                        supports: this.supports,
+                        teplSizes
+                    });
+                }
+
+                this.$emit('input', sendValues);
+            },
             toggleCustomSize() {
                 this.showCustomSize = !this.showCustomSize;
                 if (!this.values.teplica) {
@@ -149,10 +202,13 @@
                 }
             },
             updateTeplSizes() {
-                this.$set( this.teplSizes, 'Ш', [
-                    this.teplicaSize.width - this.foundationDelta,
-                    this.teplicaSize.height - this.foundationDelta,
-                ]);
+                if (!this.skipTeplSizeUpdate) {
+                    this.$set(this.teplSizes, 'Ш', [
+                        this.teplicaSize.width - this.foundationDelta,
+                        this.teplicaSize.height - this.foundationDelta,
+                    ]);
+                }
+                this.skipTeplSizeUpdate = false;
             },
             isSelected(field, variant) {
                 return this.values[field.code] === variant.value;
@@ -171,6 +227,21 @@
                 }
                 else {
                     return field.values;
+                }
+            },
+            getTeplicaWidhtHeightByCode(code) {
+                let [wM, hM] = code.split('x');
+                let width = parseInt(wM) * 100;
+                let height = parseInt(hM) * 100;
+                return {width, height};
+            },
+            addToCart() {
+                if (this.showCustomSize) {
+                    let teplSizes = this.teplSizes[ this.values.form ];
+                    this.$emit('customCart', this.customSize, this.supports, teplSizes, this.values);
+                }
+                else {
+                    this.$emit('cart', this.values);
                 }
             }
         },
@@ -209,9 +280,7 @@
                     return {width: 300, height: 400, baseWidth: 300, baseHeight: 400};
                 }
 
-                let [wM, hM] = this.values.teplica.split('x');
-                let width = parseInt(wM) * 100;
-                let height = parseInt(hM) * 100;
+                let {width, height} = this.getTeplicaWidhtHeightByCode(this.values.teplica);
 
                 let [baseWidth, baseHeight] = this.teplSizes['Ш'];
                 if (baseWidth < this.minWidth) {

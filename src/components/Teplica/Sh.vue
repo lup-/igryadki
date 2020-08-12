@@ -209,11 +209,17 @@
             widthInPixels(cm) {
                 return cm * this.cmToPixel;
             },
+            heightInPixels(cm) {
+                return cm * this.heightCmToPixel;
+            },
             widthInCm(pixels) {
                 return pixels * this.pixelToCm;
             },
             bortWidthInPixels(cm) {
                 return cm * this.bortCmToPixel;
+            },
+            bortHeightInPixels(cm) {
+                return cm * this.bortHeightCmToPixel;
             },
             pixelsToInches(px) {
                 return px * (1/96);
@@ -349,23 +355,35 @@
             }
         },
         computed: {
+            heightCmToPixel() {
+                let maxCm = 400;
+                return this.fullHeight <= maxCm
+                    ? this.cmToPixel
+                    : this.cmToPixel * (maxCm / this.fullHeight);
+            },
+            bortHeightCmToPixel() {
+                let maxCm = 400;
+                return this.fullHeight <= maxCm
+                    ? this.bortCmToPixel
+                    : this.bortCmToPixel * (maxCm / this.fullHeight);
+            },
             fullWidthPx() {
                 return this.widthInPixels( this.fullWidth );
             },
             fullHeightPx() {
-                return this.widthInPixels( this.fullHeight );
+                return this.heightInPixels( this.fullHeight );
             },
             baseWidthPx() {
                 return this.widthInPixels( this.baseWidth );
             },
             baseHeightPx() {
-                return this.widthInPixels( this.baseHeight );
+                return this.heightInPixels( this.baseHeight );
             },
             leftStartPx() {
                 return this.widthInPixels( (this.fullWidth - this.baseWidth)/2 );
             },
             topStartPx() {
-                return this.widthInPixels( (this.fullHeight - this.baseHeight)/2 );
+                return this.heightInPixels( (this.fullHeight - this.baseHeight)/2 );
             },
 
             prWidthCm() {
@@ -377,30 +395,30 @@
             },
             gryadkiPx() {
                 let [gr1, gr2, gr3, gr4] = this.gryadkiBase;
-                let grTopPx = this.topStartPx + this.widthInPixels(gr4.widthCm);
+                let grTopPx = this.topStartPx + this.heightInPixels(gr4.widthCm);
                 let prWidthPx = this.prWidthPx;
 
                 return [
                     {
                         width: this.widthInPixels(gr1.widthCm),
-                        length: this.widthInPixels(gr1.lengthCm),
+                        length: this.heightInPixels(gr1.lengthCm),
                         left: this.leftStartPx,
                         top: grTopPx
                     },
                     {
                         width: this.widthInPixels(gr2.widthCm),
-                        length: this.widthInPixels(gr2.lengthCm),
+                        length: this.heightInPixels(gr2.lengthCm),
                         left: this.leftStartPx + this.widthInPixels(gr1.widthCm) + prWidthPx,
                         top: grTopPx
                     },
                     {
                         width: this.widthInPixels(gr3.widthCm),
-                        length: this.widthInPixels(gr3.lengthCm),
+                        length: this.heightInPixels(gr3.lengthCm),
                         left: this.leftStartPx + this.widthInPixels(gr1.widthCm) + this.widthInPixels(gr2.widthCm) + 2 * prWidthPx,
                         top: grTopPx
                     },
                     {
-                        width: this.widthInPixels(gr4.widthCm),
+                        width: this.heightInPixels(gr4.widthCm),
                         length: this.widthInPixels(gr4.lengthCm),
                         left: this.leftStartPx,
                         top: this.topStartPx
@@ -409,34 +427,35 @@
             },
             bortsPx() {
                 let bortWidthPx = this.bortWidthInPixels(this.bortWidthCm);
+                let bortHeightPx = this.bortHeightInPixels(this.bortWidthCm);
                 let gryadkiPx = this.gryadkiPx;
                 let prWidthPx = this.prWidthPx;
 
                 let borts = [
                     {
                         left: {w: bortWidthPx, h: gryadkiPx[0].length, x: gryadkiPx[0].left, y: gryadkiPx[0].top},
-                        bottom: {w: gryadkiPx[0].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[0].left + bortWidthPx, y: gryadkiPx[0].top + gryadkiPx[0].length - bortWidthPx},
+                        bottom: {w: gryadkiPx[0].width - 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[0].left + bortWidthPx, y: gryadkiPx[0].top + gryadkiPx[0].length - bortHeightPx},
                         right: {w: bortWidthPx, h: gryadkiPx[0].length, x: gryadkiPx[0].left + gryadkiPx[0].width - bortWidthPx, y: gryadkiPx[0].top},
-                        top: {w: gryadkiPx[0].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[0].left + bortWidthPx, y: gryadkiPx[3].top},
+                        top: {w: gryadkiPx[0].width - 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[0].left + bortWidthPx, y: gryadkiPx[3].top},
                     },
                     {
                         left: {w: bortWidthPx, h: gryadkiPx[1].length, x: gryadkiPx[1].left, y: gryadkiPx[1].top},
-                        bottom: {w: gryadkiPx[1].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[1].left + bortWidthPx, y: gryadkiPx[1].top + gryadkiPx[1].length - bortWidthPx},
+                        bottom: {w: gryadkiPx[1].width - 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[1].left + bortWidthPx, y: gryadkiPx[1].top + gryadkiPx[1].length - bortHeightPx},
                         right: {w: bortWidthPx, h: gryadkiPx[1].length, x: gryadkiPx[1].left + gryadkiPx[1].width - bortWidthPx, y: gryadkiPx[1].top},
-                        top: {w: gryadkiPx[1].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[1].left + bortWidthPx, y: gryadkiPx[3].top},
+                        top: {w: gryadkiPx[1].width - 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[1].left + bortWidthPx, y: gryadkiPx[3].top},
                     },
                     {
                         left: {w: bortWidthPx, h: gryadkiPx[2].length, x: gryadkiPx[2].left, y: gryadkiPx[2].top},
-                        bottom: {w: gryadkiPx[2].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[2].left + bortWidthPx, y: gryadkiPx[2].top + gryadkiPx[2].length - bortWidthPx},
+                        bottom: {w: gryadkiPx[2].width - 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[2].left + bortWidthPx, y: gryadkiPx[2].top + gryadkiPx[2].length - bortHeightPx},
                         right: {w: bortWidthPx, h: gryadkiPx[2].length, x: gryadkiPx[2].left + gryadkiPx[2].width - bortWidthPx, y: gryadkiPx[2].top},
-                        top: {w: gryadkiPx[2].width - 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[2].left + bortWidthPx, y: gryadkiPx[3].top},
+                        top: {w: gryadkiPx[2].width - 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[2].left + bortWidthPx, y: gryadkiPx[3].top},
                     },
                     {
                         left: {w: bortWidthPx, h: gryadkiPx[3].width, x: gryadkiPx[3].left, y: gryadkiPx[3].top},
-                        bottomLeft: {w: prWidthPx + 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[0].left + gryadkiPx[0].width - bortWidthPx, y: gryadkiPx[3].top + gryadkiPx[3].width - bortWidthPx},
-                        bottomRight: {w: prWidthPx + 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[1].left + gryadkiPx[1].width - bortWidthPx, y: gryadkiPx[3].top + gryadkiPx[3].width - bortWidthPx},
+                        bottomLeft: {w: prWidthPx + 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[0].left + gryadkiPx[0].width - bortWidthPx, y: gryadkiPx[3].top + gryadkiPx[3].width - bortHeightPx},
+                        bottomRight: {w: prWidthPx + 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[1].left + gryadkiPx[1].width - bortWidthPx, y: gryadkiPx[3].top + gryadkiPx[3].width - bortHeightPx},
                         right: {w: bortWidthPx, h: gryadkiPx[3].width, x: gryadkiPx[2].left + gryadkiPx[2].width - bortWidthPx, y: gryadkiPx[3].top},
-                        top: {w: gryadkiPx[1].width + 2 * prWidthPx + 2*bortWidthPx, h: bortWidthPx, x: gryadkiPx[0].left + gryadkiPx[0].width - bortWidthPx, y: gryadkiPx[3].top},
+                        top: {w: gryadkiPx[1].width + 2 * prWidthPx + 2*bortWidthPx, h: bortHeightPx, x: gryadkiPx[0].left + gryadkiPx[0].width - bortWidthPx, y: gryadkiPx[3].top},
                     },
                 ];
 
@@ -558,7 +577,7 @@
                     },
                     {
                         start: {x: br2.left.x + shiftX, y: br2.bottom.y + br2.bottom.h},
-                        end: {x: br2.left.x + shiftX, y: this.topStartPx + this.widthInPixels(this.baseHeight)},
+                        end: {x: br2.left.x + shiftX, y: this.topStartPx + this.heightInPixels(this.baseHeight)},
                         text: this.textLabel( this.baseHeight - this.gryadkiBase[1].lengthCm - this.gryadkiBase[3].widthCm),
                         textPosition: 'right'
                     },
@@ -579,7 +598,7 @@
                 for (const grIndex in this.supports) {
                     let supportCount = this.supports[grIndex];
                     let supportGapCm = this.gryadkiBase[grIndex].lengthCm / (supportCount + 1);
-                    let supportGapPx = this.widthInPixels(supportGapCm);
+                    let supportGapPx = this.heightInPixels(supportGapCm);
                     let grBorts = this.bortsPx[grIndex];
                     let grTopPx = grBorts.left.y;
 
