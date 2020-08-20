@@ -1,6 +1,7 @@
 <template>
     <div class="scheme-sh">
         <svg
+                v-if="dataCorrect"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -12,6 +13,8 @@
                 :width="fullWidthPx+'mm'"
                 :height="fullHeightPx+'mm'"
                 :viewBox="[0, 0, fullWidthPx, fullHeightPx].join(' ')"
+                :style="getStyle(['svg'])"
+                ref="svgImage"
         >
             <g>
                 <rect id="teplica"
@@ -19,21 +22,37 @@
                     :y="0"
                     :width="fullWidthPx"
                     :height="fullHeightPx"
+                    :style="getStyle(['teplica'])"
+                    ref="container"
                 />
                 <rect id="teplica-inner"
                     :x="leftStartPx"
                     :y="topStartPx"
                     :width="baseWidthPx"
                     :height="baseHeightPx"
+                    :style="getStyle(['teplica-inner'])"
                 />
 
-                <rect id="g1_top_bort" :width="bortsPx[0]['top'].w" :height="bortsPx[0]['top'].h" :x="bortsPx[0]['top'].x" :y="bortsPx[0]['top'].y"/>
-                <rect id="g1_left_bort" :width="bortsPx[0]['left'].w" :height="bortsPx[0]['left'].h" :x="bortsPx[0]['left'].x" :y="bortsPx[0]['left'].y"/>
+                <rect id="g1_top_bort"
+                        :width="bortsPx[0]['top'].w"
+                        :height="bortsPx[0]['top'].h"
+                        :x="bortsPx[0]['top'].x"
+                        :y="bortsPx[0]['top'].y"
+                        :style="getStyle(['bort'])"
+                />
+                <rect id="g1_left_bort"
+                        :width="bortsPx[0]['left'].w"
+                        :height="bortsPx[0]['left'].h"
+                        :x="bortsPx[0]['left'].x"
+                        :y="bortsPx[0]['left'].y"
+                        :style="getStyle(['bort'])"
+                />
                 <rect id="g1_bottom_bort" class="handler movable"
                         :width="bortsPx[0]['bottom'].w"
                         :height="bortsPx[0]['bottom'].h"
                         :x="bortsPx[0]['bottom'].x"
                         :y="bortsPx[0]['bottom'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 0, 'bottom')"
                         @touchstart.prevent="event => startMove(event, 0, 'bottom')"
                 />
@@ -42,6 +61,7 @@
                         :height="bortsPx[0]['right'].h"
                         :x="bortsPx[0]['right'].x"
                         :y="bortsPx[0]['right'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 0, 'right')"
                         @touchstart.prevent="event => startMove(event, 0, 'right')"
                 />
@@ -51,6 +71,7 @@
                         :height="bortsPx[1]['left'].h"
                         :x="bortsPx[1]['left'].x"
                         :y="bortsPx[1]['left'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 1, 'left')"
                         @touchstart.prevent="event => startMove(event, 1, 'left')"
                 />
@@ -59,6 +80,7 @@
                         :height="bortsPx[1]['bottom'].h"
                         :x="bortsPx[1]['bottom'].x"
                         :y="bortsPx[1]['bottom'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 1, 'bottom')"
                         @touchstart.prevent="event => startMove(event, 1, 'bottom')"
                 />
@@ -67,16 +89,24 @@
                         :height="bortsPx[1]['right'].h"
                         :x="bortsPx[1]['right'].x"
                         :y="bortsPx[1]['right'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 1, 'right')"
                         @touchstart.prevent="event => startMove(event, 1, 'right')"
                 />
 
-                <rect id="g3_top_bort" :width="bortsPx[2]['top'].w" :height="bortsPx[2]['top'].h" :x="bortsPx[2]['top'].x" :y="bortsPx[2]['top'].y"/>
+                <rect id="g3_top_bort"
+                        :width="bortsPx[2]['top'].w"
+                        :height="bortsPx[2]['top'].h"
+                        :x="bortsPx[2]['top'].x"
+                        :y="bortsPx[2]['top'].y"
+                        :style="getStyle(['bort'])"
+                />
                 <rect id="g3_left_bort" class="handler movable"
                         :width="bortsPx[2]['left'].w"
                         :height="bortsPx[2]['left'].h"
                         :x="bortsPx[2]['left'].x"
                         :y="bortsPx[2]['left'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 2, 'left')"
                         @touchstart.prevent="event => startMove(event, 2, 'left')"
                 />
@@ -85,6 +115,7 @@
                         :height="bortsPx[2]['bottom'].h"
                         :x="bortsPx[2]['bottom'].x"
                         :y="bortsPx[2]['bottom'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 2, 'bottom')"
                         @touchstart.prevent="event => startMove(event, 2, 'bottom')"
                 />
@@ -93,16 +124,36 @@
                         :height="bortsPx[2]['right'].h"
                         :x="bortsPx[2]['right'].x"
                         :y="bortsPx[2]['right'].y"
+                        :style="getStyle(['bort'])"
                 />
 
-                <rect id="g4_top_bort" :width="bortsPx[3]['top'].w" :height="bortsPx[3]['top'].h" :x="bortsPx[3]['top'].x" :y="bortsPx[3]['top'].y"/>
-                <rect id="g4_left_bort" :width="bortsPx[3]['left'].w" :height="bortsPx[3]['left'].h" :x="bortsPx[3]['left'].x" :y="bortsPx[3]['left'].y"/>
-                <rect id="g4_right_bort" :width="bortsPx[3]['right'].w" :height="bortsPx[3]['right'].h" :x="bortsPx[3]['right'].x" :y="bortsPx[3]['right'].y"/>
+                <rect id="g4_top_bort"
+                        :width="bortsPx[3]['top'].w"
+                        :height="bortsPx[3]['top'].h"
+                        :x="bortsPx[3]['top'].x"
+                        :y="bortsPx[3]['top'].y"
+                        :style="getStyle(['bort'])"
+                />
+                <rect id="g4_left_bort"
+                        :width="bortsPx[3]['left'].w"
+                        :height="bortsPx[3]['left'].h"
+                        :x="bortsPx[3]['left'].x"
+                        :y="bortsPx[3]['left'].y"
+                        :style="getStyle(['bort'])"
+                />
+                <rect id="g4_right_bort"
+                        :width="bortsPx[3]['right'].w"
+                        :height="bortsPx[3]['right'].h"
+                        :x="bortsPx[3]['right'].x"
+                        :y="bortsPx[3]['right'].y"
+                        :style="getStyle(['bort'])"
+                />
                 <rect id="g4_bottom_bort_left" class="handler movable"
                         :width="bortsPx[3]['bottomLeft'].w"
                         :height="bortsPx[3]['bottomLeft'].h"
                         :x="bortsPx[3]['bottomLeft'].x"
                         :y="bortsPx[3]['bottomLeft'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 3, 'bottomLeft')"
                         @touchstart.prevent="event => startMove(event, 3, 'bottomLeft')"
                 />
@@ -111,6 +162,7 @@
                         :height="bortsPx[3]['bottomRight'].h"
                         :x="bortsPx[3]['bottomRight'].x"
                         :y="bortsPx[3]['bottomRight'].y"
+                        :style="getStyle(['bort'])"
                         @mousedown="event => startMove(event, 3, 'bottomRight')"
                         @touchstart.prevent="event => startMove(event, 3, 'bottomRight')"
                 />
@@ -128,7 +180,7 @@
                     :vertical="handler.vertical"
                 ></handler>
 
-                <path v-for="(support, index) in supportD" :d="support" :id="'gx_support_'+index" :key="'gx_support_'+index" />
+                <path v-for="(support, index) in supportD" :d="support" :id="'gx_support_'+index" :key="'gx_support_'+index"  :style="getStyle(['support'])"/>
             </g>
         </svg>
     </div>
@@ -178,7 +230,7 @@
                 passWidthCm,
                 minPrSizeCm,
                 minVhSizeCm,
-                gryadkiBase: this.value || this.getBaseSizes(this.baseWidth, this.baseHeight, bortWidthCm, passWidthCm),
+                gryadkiBase: this.value ? this.value.size : this.getBaseSizes(this.baseWidth, this.baseHeight, bortWidthCm, passWidthCm),
             }
         },
         mounted() {
@@ -192,6 +244,12 @@
             baseHeight() {
                 this.gryadkiBase = this.getBaseSizes(this.baseWidth, this.baseHeight, this.bortWidthCm, this.passWidthCm);
                 this.emitSizeUpdates();
+            },
+            supports: {
+                deep: true,
+                handler() {
+                    this.emitSizeUpdates();
+                }
             }
         },
         methods: {
@@ -215,6 +273,9 @@
             widthInCm(pixels) {
                 return pixels * this.pixelToCm;
             },
+            heightInCm(px) {
+                return px / this.heightCmToPixel;
+            },
             bortWidthInPixels(cm) {
                 return cm * this.bortCmToPixel;
             },
@@ -237,16 +298,34 @@
                 //82.96 px = 21.94932 mm
                 return this.inchesToMM( this.pixelsToInches(px) );
             },
+            mmToPixels(mm) {
+                return this.inchesToPixels( this.mmToInches(mm) );
+            },
             pointToPath(point) {
                 let {start, end} = point;
                 return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
             },
-            textLabel(num) {
-                return Math.floor(num);
+            roundSize(num, fraction = false) {
+                return fraction
+                    ? parseFloat( num.toFixed(1) )
+                    : Math.floor(num);
+            },
+            textLabel(num, fraction = false) {
+                return this.roundSize(num, fraction).toFixed(1).replace('.0', '');
             },
 
             emitSizeUpdates() {
-                this.$emit('input', this.gryadkiBase);
+                if (this.dataCorrect) {
+                    this.$emit('input', {
+                        size: this.gryadkiBase,
+                        details: this.getTeplicaDetails(),
+                        svgImage: {
+                            width: this.mmToPixels( this.fullWidthPx ),
+                            height: this.mmToPixels( this.fullHeightPx ),
+                            content: this.$refs.svgImage.outerHTML,
+                        }
+                    });
+                }
             },
 
             updateConstraintSizes(grIndex, propType, delta) {
@@ -352,6 +431,87 @@
 
                 elem.addEventListener(events.move, moveFn);
                 elem.addEventListener(events.stop, stopFn);
+            },
+
+            getTeplicaDetails() {
+                let aggrBorts = this.bortDetailsCm.reduce( (aggr, grBorts) => {
+                    for (const bortIndex in grBorts) {
+                        let splitBort = grBorts[bortIndex] instanceof Array;
+                        let bortWidths = splitBort
+                            ? grBorts[bortIndex]
+                            : [ grBorts[bortIndex] ];
+
+                        for (const width of bortWidths) {
+                            let widthKey = this.textLabel(width, splitBort);
+                            if (aggr[widthKey]) {
+                                aggr[widthKey]+=1;
+                            }
+                            else {
+                                aggr[widthKey] = 1;
+                            }
+                        }
+                    }
+
+                    return aggr;
+                }, {});
+
+                let aggrSupports = this.supportDetailsCm.reduce( (aggr, grSupports) => {
+                    for (const support of grSupports) {
+                        let widthKey = this.textLabel(support.width);
+                        if (!aggr[widthKey]) {
+                            aggr[widthKey] = 0;
+                        }
+                        aggr[widthKey] += support.count;
+                    }
+
+                    return aggr;
+                }, {});
+
+                let smallLegs = 4;
+                let gr4largeLegs = 8;
+                let totalSupportsCount = this.supports.reduce((sum, count) => sum+count, 0);
+                let largeLegs = gr4largeLegs + totalSupportsCount * 4;
+
+                let baseFastening = 72;
+                let fastening = baseFastening + totalSupportsCount * 12;
+
+                let detailsText = "Борты:\n";
+                for (const widthCm in aggrBorts) {
+                    const count = aggrBorts[widthCm];
+                    detailsText += `${widthCm}: ${count}\n`;
+                }
+
+                detailsText += "\nСтяжки:\n";
+                for (const widthCm in aggrSupports) {
+                    const count = aggrSupports[widthCm];
+                    detailsText += `${widthCm}: ${count}\n`;
+                }
+
+                detailsText += `\nНожки:\nстандарт: ${largeLegs}\nмалые: ${smallLegs}\n`;
+                detailsText += `\nКрепеж:\nболты: ${fastening}\nгайки:${fastening}\n`;
+
+                return detailsText;
+            },
+            splitBySupports(widthCm, grIndex) {
+                let supportsCount = this.supports[grIndex];
+                let bortsCount = supportsCount + 1;
+                let bortWidth = this.roundSize(widthCm / bortsCount, true);
+                return Array(bortsCount).fill(bortWidth);
+            },
+            getStyle(classes) {
+                let allPropsAndValues = classes.reduce((collect, styleClass) => {
+                    let props = this.styles[styleClass];
+
+                    let propsAndValues = Object.keys(props).map( prop => {
+                        let value = props[prop];
+                        return `${prop}: ${value}`;
+                    }, []);
+
+                    collect = collect.concat(propsAndValues);
+                    return collect;
+                }, []);
+
+                return allPropsAndValues.join(';');
             }
         },
         computed: {
@@ -387,6 +547,10 @@
             },
 
             prWidthCm() {
+                if (!this.gryadkiBase || !this.gryadkiBase.length) {
+                    return 0;
+                }
+
                 let [gr1, gr2, gr3, gr4] = this.gryadkiBase;
                 return (gr4.lengthCm - gr1.widthCm - gr2.widthCm - gr3.widthCm)/2;
             },
@@ -394,6 +558,10 @@
                 return this.widthInPixels( this.prWidthCm );
             },
             gryadkiPx() {
+                if (!this.gryadkiBase || !this.gryadkiBase.length) {
+                    return 0;
+                }
+
                 let [gr1, gr2, gr3, gr4] = this.gryadkiBase;
                 let grTopPx = this.topStartPx + this.heightInPixels(gr4.widthCm);
                 let prWidthPx = this.prWidthPx;
@@ -423,6 +591,66 @@
                         left: this.leftStartPx,
                         top: this.topStartPx
                     },
+                ]
+            },
+            gryadkiBaseRound() {
+                if (!this.gryadkiBase || !this.gryadkiBase.length) {
+                    return [];
+                }
+
+                return this.gryadkiBase.map( rawSize => {
+                    return {
+                        widthCm: this.roundSize(rawSize.widthCm),
+                        lengthCm: this.roundSize(rawSize.lengthCm)
+                    };
+                });
+            },
+            bortDetailsCm() {
+                if (!this.gryadkiBase.map) {
+                    return [];
+                }
+
+                let bortSize = this.bortWidthCm;
+                let grSizes = this.gryadkiBaseRound;
+                return [
+                    {
+                        left: this.splitBySupports(grSizes[0].lengthCm, 0),
+                        right: this.splitBySupports(grSizes[0].lengthCm, 0),
+                        bottom: grSizes[0].widthCm - 2*bortSize
+                    },
+                    {
+                        left: this.splitBySupports(grSizes[1].lengthCm, 1),
+                        right: this.splitBySupports(grSizes[1].lengthCm, 1),
+                        bottom: grSizes[1].widthCm - 2*bortSize
+                    },
+                    {
+                        left: this.splitBySupports(grSizes[2].lengthCm, 2),
+                        right: this.splitBySupports(grSizes[2].lengthCm, 2),
+                        bottom: grSizes[2].widthCm - 2*bortSize
+                    },
+                    {
+                        left: grSizes[3].widthCm,
+                        right: grSizes[3].widthCm,
+                        bottomLeft: this.roundSize(this.prWidthCm) + 2*bortSize,
+                        bottomRight: this.roundSize(this.prWidthCm) + 2*bortSize,
+                        topLeft: grSizes[0].widthCm - 2*bortSize,
+                        topRight: grSizes[2].widthCm - 2*bortSize,
+                        top: grSizes[3].lengthCm - grSizes[0].widthCm - grSizes[2].widthCm - 2*bortSize,
+                    },
+                ];
+            },
+            supportDetailsCm() {
+                if (!this.gryadkiBase.map) {
+                    return [];
+                }
+
+                let grSizes = this.gryadkiBaseRound;
+
+                return [
+                    [{width: grSizes[0].widthCm, count: this.supports[0] }],
+                    [{width: grSizes[1].widthCm, count: this.supports[1] }],
+                    [{width: grSizes[2].widthCm, count: this.supports[2] }],
+                    [{width: grSizes[3].widthCm, count: 2 }, {width: grSizes[0].widthCm, count: 1}, {width: grSizes[2].widthCm, count: 1}],
                 ]
             },
             bortsPx() {
@@ -561,8 +789,6 @@
                         text: this.textLabel( this.gryadkiBase[3].lengthCm ),
                         textPosition: 'bottom'
                     },
-
-
                     {
                         start: {x: br1.right.x + br1.right.w, y: grMiddles[1].y - shiftY},
                         end: {x: br2.left.x, y: grMiddles[1].y - shiftY},
@@ -625,112 +851,117 @@
                     borts[2].bottom.y+borts[2].bottom.h
                 );
             },
+
+            dataCorrect() {
+                if (!this.gryadkiBase || !this.gryadkiBase.length) {
+                    return false;
+                }
+
+                return true;
+            },
+
+            styles() {
+                return {
+                    'svg': {
+                        'user-select': 'none',
+                        'width': '100%',
+                        'max-width': '700px',
+                        'height': 'auto',
+                        'max-height': '90vh',
+                        'margin': '0',
+                    },
+                    'teplica': {
+                        'opacity': '1',
+                        'fill': '#000000',
+                        'fill-opacity': '0.3',
+                        'stroke': '#000000',
+                        'stroke-linecap': 'square',
+                        'stroke-linejoin': 'miter',
+                        'stroke-dasharray': 'none',
+                        'stroke-dashoffset': '0',
+                        'stroke-opacity': '0.4',
+                    },
+                    'teplica-inner': {
+                        'opacity': '1',
+                        'fill': '#ffffff',
+                        'fill-opacity': '1',
+                        'stroke': '#000000',
+                        'stroke-linecap': 'square',
+                        'stroke-linejoin': 'miter',
+                        'stroke-dasharray': 'none',
+                        'stroke-dashoffset': '0',
+                        'stroke-opacity': '0.4',
+                    },
+                    'bort': {
+                        'opacity': '1',
+                        'fill': 'white',
+                        'fill-opacity': '1',
+                        'stroke': '#000000',
+                        'stroke-width': '0.26499999',
+                        'stroke-linecap': 'butt',
+                        'stroke-linejoin': 'miter',
+                        'stroke-miterlimit': '4',
+                        'stroke-dasharray': 'none',
+                        'stroke-dashoffset': '0',
+                        'stroke-opacity': '1',
+                        'paint-order': 'normal',
+                    },
+                    'title': {
+                        'font-style': 'normal',
+                        'font-weight': 'normal',
+                        'font-size': '4.93888903px',
+                        'line-height': '125%',
+                        'font-family': 'Sans',
+                        'letter-spacing': '0px',
+                        'word-spacing': '0px',
+                        'fill': '#000000',
+                        'fill-opacity': '1',
+                        'stroke': 'none',
+                        'stroke-width': '0.26458332px',
+                        'stroke-linecap': 'butt',
+                        'stroke-linejoin': 'miter',
+                        'stroke-opacity': '1',
+                    },
+                    'text': {
+                        'font-style': 'normal',
+                        'font-weight': 'normal',
+                        'font-size': '10.58333302px',
+                        'line-height': '125%',
+                        'font-family': 'Sans',
+                        'letter-spacing': '0px',
+                        'word-spacing': '0px',
+                        'fill': '#000000',
+                        'fill-opacity': '1',
+                        'stroke': 'none',
+                        'stroke-width': '0.26458332px',
+                        'stroke-linecap': 'butt',
+                        'stroke-linejoin': 'miter',
+                        'stroke-opacity': '1',
+                    },
+                    'support': {
+                        'fill': 'none',
+                        'fill-rule': 'evenodd',
+                        'stroke': '#000000',
+                        'stroke-width': '0.26458332',
+                        'stroke-linecap': 'butt',
+                        'stroke-linejoin': 'miter',
+                        'stroke-miterlimit': '4',
+                        'stroke-dasharray': '0.52916663, 0.52916663',
+                        'stroke-dashoffset': '0',
+                        'stroke-opacity': '1',
+                    }
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
-    svg {
-        user-select: none;
-        width: 100%;
-        max-width: 700px;
-        height: auto;
-        max-height: 90vh;
-        margin: 0;
-    }
-
     .movable {
         cursor: move;
-    }
-
-    #teplica {
-        opacity: 1;
-        fill: #000000;
-        fill-opacity: 0.3;
-        stroke: #000000;
-        stroke-linecap: square;
-        stroke-linejoin: miter;
-        stroke-dasharray: none;
-        stroke-dashoffset: 0;
-        stroke-opacity: 0.4;
-    }
-
-    #teplica-inner {
-        opacity: 1;
-        fill: #ffffff;
-        fill-opacity: 1;
-        stroke: #000000;
-        stroke-linecap: square;
-        stroke-linejoin: miter;
-        stroke-dasharray: none;
-        stroke-dashoffset: 0;
-        stroke-opacity: 0.4;
-    }
-
-    [id*="bort"] {
-        opacity: 1;
-        fill: white;
-        fill-opacity: 1;
-        stroke: #000000;
-        stroke-width: 0.26499999;
-        stroke-linecap: butt;
-        stroke-linejoin: miter;
-        stroke-miterlimit: 4;
-        stroke-dasharray: none;
-        stroke-dashoffset: 0;
-        stroke-opacity: 1;
-        paint-order: normal;
     }
 
     .handler:hover, .handler.active {
         fill: rgba(0, 255, 0, 0.3);
     }
-
-    [id*="title"] {
-        font-style:normal;
-        font-weight:normal;
-        font-size:4.93888903px;
-        line-height:125%;
-        font-family:Sans;
-        letter-spacing:0px;
-        word-spacing:0px;
-        fill:#000000;
-        fill-opacity:1;
-        stroke:none;
-        stroke-width:0.26458332px;
-        stroke-linecap:butt;
-        stroke-linejoin:miter;
-        stroke-opacity:1;
-    }
-
-    [id*="text"] {
-        font-style:normal;
-        font-weight:normal;
-        font-size:10.58333302px;
-        line-height:125%;
-        font-family:Sans;
-        letter-spacing:0px;
-        word-spacing:0px;
-        fill:#000000;
-        fill-opacity:1;
-        stroke:none;
-        stroke-width:0.26458332px;
-        stroke-linecap:butt;
-        stroke-linejoin:miter;
-        stroke-opacity:1;
-    }
-
-    [id*="support"] {
-        fill: none;
-        fill-rule: evenodd;
-        stroke: #000000;
-        stroke-width: 0.26458332;
-        stroke-linecap: butt;
-        stroke-linejoin: miter;
-        stroke-miterlimit: 4;
-        stroke-dasharray: 0.52916663, 0.52916663;
-        stroke-dashoffset: 0;
-        stroke-opacity: 1;
-    }
-
 </style>

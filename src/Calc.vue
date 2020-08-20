@@ -28,8 +28,16 @@
             </b-tab>
         </b-tabs>
 
+        <b-row class="px-2 pt-4" v-if="error">
+            <b-col cols="12">
+                <b-alert variant="danger" dismissible show @dismissed="error = false">{{error}}</b-alert>
+            </b-col>
+        </b-row>
+
         <b-row class="px-2 pt-4">
-            <b-button href="/cart_items" variant="primary" size="lg" block>Оформить заказ</b-button>
+            <b-col cols="12">
+                <b-button href="/cart_items" variant="primary" size="lg" block>Оформить заказ</b-button>
+            </b-col>
         </b-row>
 
         <b-row class="mt-4">
@@ -53,6 +61,7 @@
         data() {
             return {
                 tabIndex: 0,
+                error: false,
                 types: [
                     {code: 'gryadka', title: 'Грядка'},
                     {code: 'klumba', title: 'Клумба'},
@@ -65,6 +74,12 @@
                     teplica: {},
                 },
                 allProducts: [],
+                apiAuth: {
+                    //username: '9743441fcdaa238439536e2f4c9ea9ba',
+                    //password: 'eca58da341ccff33149e9add13e6161c'
+                    username: 'igryadki@gmail.com',
+                    password: 'HCZwa3al2'
+                }
             }
         },
         components: {
@@ -72,6 +87,10 @@
         },
         created() {
             this.loadProducts();
+        },
+        errorCaptured(err) {
+            this.error = err;
+            return false;
         },
         methods: {
             addToCart() {
@@ -87,15 +106,25 @@
                     });
                 }
             },
-            async addCustomTeplicaToCart(gryadkiSizes, supportCount, teplSizes, fields) {
+            async addCustomTeplicaToCart(gryadkiSizes, supportCount, teplSizes, fields, teplicaDetails, svgImage) {
                 let variant = await this.addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields);
                 await this.loadProducts();
+
+                let pngImageDataUrl = await this.svgToPngDataUrl(svgImage);
+                let pngImage = pngImageDataUrl.replace('data:image/png;base64,', '');
+                let file = await this.uploadImage(variant.id+'.png', pngImage);
+
                 let cartApi = window.Cart;
                 if (variant && fields.quantity && cartApi) {
                     let items = {};
                     items[variant.id] = fields.quantity;
+
+                    let comments = {};
+                    comments[variant.id] = teplicaDetails + `\nСхема:\n${file['absolute-url']}`;
+
                     cartApi.add({
-                        items: items
+                        items,
+                        comments,
                     });
                 }
             },
@@ -162,6 +191,41 @@
 
                 return customPrice;
             },
+
+            svgToPngDataUrl(svgImage) {
+                return new Promise(resolve => {
+                    let canvas = document.createElement("canvas");
+                    canvas.width = svgImage.width;
+                    canvas.height = svgImage.height;
+
+                    let ctx = canvas.getContext("2d");
+                    let DOMURL = self.URL || self.webkitURL || self;
+                    let img = new Image();
+                    let svg = new Blob([svgImage.content], {type: "image/svg+xml;charset=utf-8"});
+                    let url = DOMURL.createObjectURL(svg);
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0);
+                        let png = canvas.toDataURL("image/png");
+                        DOMURL.revokeObjectURL(url);
+                        resolve(png);
+                    };
+                    img.src = url;
+                });
+            },
+            async uploadImage(name, base64Content) {
+                let addFileUrl = `${this.apiHostName}/admin/files.json`;
+                let data = {
+                    file: {
+                        filename: name,
+                        attachment: base64Content
+                    }
+                }
+
+                let response = await axios.post(addFileUrl, data, {auth: this.apiAuth});
+
+                let newFile = response.data.file;
+                return newFile;
+            },
             async addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields) {
                 let productIds = {
                     'П': 201222310,
@@ -191,12 +255,7 @@
                     ]
                 }
 
-                let response = await axios.post(addVariantUrl, {variant: productVariant}, {
-                    auth: {
-                        username: 'igryadki@gmail.com',
-                        password: 'HCZwa3al2'
-                    }
-                });
+                let response = await axios.post(addVariantUrl, {variant: productVariant}, {auth: this.apiAuth});
 
                 return response.data;
             },

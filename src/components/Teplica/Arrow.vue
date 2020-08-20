@@ -2,18 +2,19 @@
     <g>
         <defs :id="'arrowDefs'+id">
             <marker :id="'arrowStart'+id" orient="auto" refY="0" refX="0" style="overflow:visible">
-                <path class="arrow-marker" :d="markerPath" :transform="markerStartTransform" />
+                <path class="arrow-marker" :d="markerPath" :transform="markerStartTransform" :style="getStyle(['arrow-marker'])"/>
             </marker>
             <marker :id="'arrowEnd'+id" orient="auto" refY="0" refX="0" style="overflow:visible">
-                <path class="arrow-marker" :d="markerPath" :transform="markerEndTransform"/>
+                <path class="arrow-marker" :d="markerPath" :transform="markerEndTransform" :style="getStyle(['arrow-marker'])"/>
             </marker>
         </defs>
-        <path :id="'arrow'+id" class="arrow" :d="path" :style="`marker-start: url(#arrowStart${id}); marker-end: url(#arrowEnd${id});`" />
+        <path :id="'arrow'+id" class="arrow" :d="path" :style="`marker-start: url(#arrowStart${id}); marker-end: url(#arrowEnd${id}); ${getStyle(['arrow'])}`" />
         <text class="arrow-text" v-if="text"
                 :x="textCoords.x"
                 :y="textCoords.y"
                 :text-anchor="vertical ? 'middle' : (textPosition === 'left' ? 'end' : 'start')"
                 :dominant-baseline="vertical ? (textPosition === 'bottom' ? 'hanging' : 'baseline') : 'middle'"
+                :style="getStyle(['arrow-text'])"
         >{{text}}</text>
     </g>
 </template>
@@ -31,6 +32,23 @@
         },
         mounted () {
             this.id = this._uid;
+        },
+        methods: {
+            getStyle(classes) {
+                let allPropsAndValues = classes.reduce((collect, styleClass) => {
+                    let props = this.styles[styleClass];
+
+                    let propsAndValues = Object.keys(props).map( prop => {
+                        let value = props[prop];
+                        return `${prop}: ${value}`;
+                    }, []);
+
+                    collect = collect.concat(propsAndValues);
+                    return collect;
+                }, []);
+
+                return allPropsAndValues.join(';');
+            }
         },
         computed: {
             arrowStart() {
@@ -58,12 +76,12 @@
                     : 0;
 
                 return {
-                    x: (this.arrowStart.x + this.arrowEnd.x)/2 + xShift,
-                    y: (this.arrowStart.y + this.arrowEnd.y)/2 + yShift,
+                    x: (this.arrowStart.x + this.arrowEnd.x) / 2 + xShift,
+                    y: (this.arrowStart.y + this.arrowEnd.y) / 2 + yShift,
                 }
             },
             markerShift() {
-                return this.markerWidth + this.markerHeight/2;
+                return this.markerWidth + this.markerHeight / 2;
             },
             markerStartTransform() {
                 return `translate(${this.markerShift}, 0)`;
@@ -72,40 +90,44 @@
                 return `translate(-${this.markerShift}, 0) rotate(180)`;
             },
             markerPath() {
-                let h = this.markerHeight/2;
+                let h = this.markerHeight / 2;
                 let w = this.markerWidth;
                 return `M 0,0 ${h},-${h} -${w},0 ${h},${h} Z`;
             },
             path() {
                 return `M ${this.arrowStart.x} ${this.arrowStart.y} L ${this.arrowEnd.x} ${this.arrowEnd.y}`;
+            },
+            styles() {
+                return {
+                    'arrow': {
+                        'fill': 'none',
+                        'fill-rule': 'evenodd',
+                        'stroke': '#da3a3a',
+                        'stroke-width': '0.465',
+                        'stroke-linecap': 'butt',
+                        'stroke-linejoin': 'miter',
+                        'stroke-miterlimit': '4',
+                        'stroke-dasharray': 'none',
+                        'stroke-opacity': '1',
+                    },
+
+                    'arrow-marker': {
+                        'fill': '#da3a3a',
+                        'fill-opacity': '1',
+                        'fill-rule': 'evenodd',
+                        'stroke': '#da3a3a',
+                        'stroke-width': '1pt',
+                        'stroke-opacity': 1,
+                    },
+
+                    'arrow-text': {
+                        'font-size': '5pt',
+                    }
+                }
             }
         }
     }
 </script>
 
 <style scoped>
-    .arrow {
-        fill:none;
-        fill-rule:evenodd;
-        stroke:#da3a3a;
-        stroke-width:0.465;
-        stroke-linecap:butt;
-        stroke-linejoin:miter;
-        stroke-miterlimit:4;
-        stroke-dasharray:none;
-        stroke-opacity:1;
-    }
-
-    .arrow-marker {
-        fill: #da3a3a;
-        fill-opacity: 1;
-        fill-rule: evenodd;
-        stroke: #da3a3a;
-        stroke-width: 1pt;
-        stroke-opacity: 1;
-    }
-
-    .arrow-text {
-        font-size: 5pt;
-    }
 </style>

@@ -48,7 +48,7 @@
                         <b-col cols="12" sm="2"></b-col>
                         <b-col cols="12" sm="10">
                             <teplica-sh
-                                    v-model="customSize"
+                                    v-model="calcData"
 
                                     :base-width="teplicaSize.baseWidth"
                                     :base-height="teplicaSize.baseHeight"
@@ -116,6 +116,9 @@
             return {
                 showCustomSize: false,
                 customSize: false,
+                customDetails: false,
+                customSvgImage: false,
+                calcData: false,
                 skipTeplSizeUpdate: false,
                 teplSizes: {'Ш': [290, 390]},
                 values,
@@ -167,7 +170,16 @@
                         }
                     }
 
+                    this.updateSupportCount();
                     this.sendDataChanges();
+                }
+            },
+            calcData: {
+                deep: true,
+                handler() {
+                    this.customSize = this.calcData.size;
+                    this.customDetails = this.calcData.details;
+                    this.customSvgImage = this.calcData.svgImage;
                 }
             },
             foundationCode() {
@@ -200,6 +212,19 @@
                 if (!this.values.teplica) {
                     this.$set(this.values, 'teplica', '3x4');
                 }
+                this.$nextTick(() => {
+                    this.updateSupportCount();
+                });
+            },
+            updateSupportCount() {
+                this.supports = this.supports.map( (currentSupports, grIndex) => {
+                    let maxSupports = this.maxSupports[grIndex];
+                    if (currentSupports > 0) {
+                        return currentSupports;
+                    }
+
+                    return maxSupports > 0 ? 1 : 0;
+                });
             },
             updateTeplSizes() {
                 if (!this.skipTeplSizeUpdate) {
@@ -209,6 +234,8 @@
                     ]);
                 }
                 this.skipTeplSizeUpdate = false;
+
+                this.updateSupportCount();
             },
             isSelected(field, variant) {
                 return this.values[field.code] === variant.value;
@@ -238,7 +265,7 @@
             addToCart() {
                 if (this.showCustomSize) {
                     let teplSizes = this.teplSizes[ this.values.form ];
-                    this.$emit('customCart', this.customSize, this.supports, teplSizes, this.values);
+                    this.$emit('customCart', this.customSize, this.supports, teplSizes, this.values, this.customDetails, this.customSvgImage);
                 }
                 else {
                     this.$emit('cart', this.values);
@@ -260,7 +287,7 @@
                 return foundation ? foundation.deltaCm : 0;
             },
             maxSupports() {
-                if (!this.customSize) {
+                if (!this.customSize || !this.customSize.map) {
                     return [0, 0, 0];
                 }
 
