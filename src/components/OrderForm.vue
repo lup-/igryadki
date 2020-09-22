@@ -1,5 +1,5 @@
 <template>
-    <b-form class="mt-4">
+    <b-form class="mt-4" :class="{'loadingForm': isLoading}">
         <b-form-row v-for="(field, index) in fields" :key="field.code+index"
                 class="mb-2"
         >
@@ -83,7 +83,10 @@
             </b-col>
         </b-form-row>
         <b-form-row class="my-4">
-            <b-button variant="primary" size="lg" block :disabled="!formIsFilled" @click="addToCart">В корзину</b-button>
+            <b-button class="btn-cart" variant="primary" size="lg" block :disabled="!formIsFilled || isLoading" @click="addToCart">
+                В корзину
+                <div class="loader" v-if="isLoading"></div>
+            </b-button>
         </b-form-row>
     </b-form>
 </template>
@@ -101,7 +104,7 @@
 
     export default {
         name: "OrderForm",
-        props: ['fields', 'formType'],
+        props: ['fields', 'formType', 'isLoading'],
         components: {ColorInput, RadioInput, IntInput, TeplicaSh},
         data() {
             let values = this.fields.reduce( (aggr, fieldData) => {
@@ -336,5 +339,84 @@
     .inline-input {
         display: inline-block;
         width: auto;
+    }
+
+    .loader,
+    .loader:before,
+    .loader:after {
+        border-radius: 50%;
+    }
+
+    .loadingForm .btn-cart {
+        position: relative;
+    }
+
+    .loader {
+        color: #ffffff;
+        font-size: 11px;
+        text-indent: -99999em;
+        margin: -1em auto;
+        position: relative;
+        width: 2em;
+        height: 2em;
+        box-shadow: inset 0 0 0 0.3em;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+
+        position: absolute;
+        z-index: 10000;
+        margin-right: 5em;
+        margin-top: -2.2em;
+    }
+    .loader:before,
+    .loader:after {
+        position: absolute;
+        content: '';
+    }
+    .loader:before {
+        width: 1.2em;
+        height: 2.2em;
+        background: #008736;
+        border-radius: 2.2em 0 0 2.2em;
+        top: -0.1em;
+        left: -0.1em;
+        -webkit-transform-origin: 1.2em 1.1em;
+        transform-origin: 1.2em 1.1em;
+        -webkit-animation: load2 2s infinite ease 1.5s;
+        animation: load2 2s infinite ease 1.5s;
+    }
+
+    .loader:after {
+        width: 1.2em;
+        height: 2.2em;
+        background: #008736;
+        border-radius: 0 2.2em 2.2em 0;
+        top: -0.1em;
+        left: 1.1em;
+        -webkit-transform-origin: 0px 1.1em;
+        transform-origin: 0px 1.1em;
+        -webkit-animation: load2 2s infinite ease;
+        animation: load2 2s infinite ease;
+    }
+    @-webkit-keyframes load2 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    @keyframes load2 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
     }
 </style>

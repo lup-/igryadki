@@ -21,6 +21,7 @@
                 <order-form
                         :fields="formFields[type.code]"
                         :form-type="type.code"
+                        :is-loading="isLoading"
                         v-model="orderData[type.code]"
                         @cart="addToCart"
                         @customCart="addCustomTeplicaToCart"
@@ -56,12 +57,36 @@
     import formFields from "./fields";
     import colors from "./colors";
 
+    function cartApiEmulator(apiHost) {
+        return {
+            add({items, comments}) {
+                let cartUrl = `${apiHost}/front_api/cart.json`;
+                let cartData = new FormData();
+                cartData.append('lang', '');
+                cartData.append('_method', 'patch');
+
+                for (const variantId in items) {
+                    const variantCount = items[variantId];
+                    const comment = comments && comments[variantId] ? comments[variantId] : false;
+
+                    cartData.append(`variant_ids[${variantId}]`, variantCount);
+                    if (comment) {
+                        cartData.append(`order_line_comments[${variantId}]`, comment);
+                    }
+                }
+
+                return axios.post(cartUrl, cartData);
+            }
+        }
+    }
+
     export default {
         name: 'Calc',
         data() {
             return {
                 tabIndex: 0,
                 error: false,
+                isLoading: false,
                 types: [
                     {code: 'gryadka', title: 'Грядка'},
                     {code: 'klumba', title: 'Клумба'},
@@ -90,13 +115,14 @@
         },
         errorCaptured(err) {
             this.error = err;
+            console.error(err);
             return false;
         },
         methods: {
             addToCart() {
                 let variant = this.getProductVariant(this.sku);
                 let quantity = this.formData.quantity;
-                let cartApi = window.Cart;
+                let cartApi = window.Cart || cartApiEmulator(this.apiHostName);
 
                 if (variant && quantity && cartApi) {
                     let items = {};
@@ -107,35 +133,45 @@
                 }
             },
             async addCustomTeplicaToCart(gryadkiSizes, supportCount, teplSizes, fields, teplicaDetails, svgImage) {
-                let variant = await this.addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields);
-                await this.loadProducts();
-
+                this.isLoading = true;
                 let pngImageDataUrl = await this.svgToPngDataUrl(svgImage);
                 let pngImage = pngImageDataUrl.replace('data:image/png;base64,', '');
-                let file = await this.uploadImage(variant.id+'.png', pngImage);
 
-                let cartApi = window.Cart;
+                let sku = this.getCustomSku(fields);
+                let filename = `${sku}-${(new Date).getTime()}.png`;
+                let file = await this.uploadImage(filename, pngImage);
+                let imageUrl = file['absolute_url'];
+
+                let variant = await this.addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields, imageUrl);
+                await this.loadProducts(true);
+
+                let cartApi = window.Cart || cartApiEmulator(this.apiHostName);
                 if (variant && fields.quantity && cartApi) {
                     let items = {};
                     items[variant.id] = fields.quantity;
 
                     let comments = {};
-                    comments[variant.id] = teplicaDetails + `\nСхема:\n${file['absolute-url']}`;
+                    comments[variant.id] = teplicaDetails + `\nСхема:\n${imageUrl}`;
+
+                    console.log(comments);
 
                     cartApi.add({
                         items,
                         comments,
                     });
                 }
+
+                this.isLoading = false;
             },
-            getOptionValues(gryadkiSizes, supportCount, teplSizes, fields) {
+            getOptionValues(gryadkiSizes, supportCount, teplSizes, fields, imageUrl) {
                 return [
-                    fields.bort.toString(), //Высота
-                    fields.teplica, //Размер теплицы
-                    this.getColorTitle(fields.color), //Цвет
-                    fields.type === 'hard' ? "Да" : "Нет", //Усиленные
-                    this.getTeplParams(gryadkiSizes, supportCount, teplSizes), ////Параметры теплицы
-                ]
+                    {"option_name_id": 1521697, "value": fields.bort.toString()}, //Высота
+                    {"option_name_id": 1521705, "value": fields.teplica}, //Размер теплицы
+                    {"option_name_id": 1522016, "value": this.getColorTitle(fields.color)}, //Цвет
+                    {"option_name_id": 1966495, "value": this.getTeplParams(gryadkiSizes, supportCount, teplSizes)}, //Параметры теплицы
+                    {"option_name_id": 1974516, "value": imageUrl }, //Ссылка
+                    {"option_name_id": 1535115, "value": fields.type === 'hard' ? "усиленный" : "стандартный"}, //Усиленные
+                ];
             },
             getColorTitle(value) {
                 if (!value) {
@@ -145,9 +181,12 @@
                 let color = colors.find( color => color.code === value );
                 return color ? color.title : 'Цинк';
             },
+            sizeLabel(size) {
+                return Math.floor(size);
+            },
             getTeplParams(gryadkiSizes, supportCount, teplSizes) {
                 let sizeStrings = gryadkiSizes.map((size, index) => {
-                    let sizeString = `${size.widthCm}x${size.lengthCm}`;
+                    let sizeString = `${this.sizeLabel(size.widthCm)}x${this.sizeLabel(size.lengthCm)}`;
                     if (index < 3) {
                         sizeString += `-${supportCount[index]}`;
                     }
@@ -223,10 +262,10 @@
 
                 let response = await axios.post(addFileUrl, data, {auth: this.apiAuth});
 
-                let newFile = response.data.file;
+                let newFile = response.data;
                 return newFile;
             },
-            async addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields) {
+            async addNewTeplicaVariant(gryadkiSizes, supportCount, teplSizes, fields, imageUrl) {
                 let productIds = {
                     'П': 201222310,
                     'Ш': 201223080,
@@ -237,7 +276,9 @@
                 let customProductId = productIds[ fields.form ];
 
                 let addVariantUrl = `${this.apiHostName}/admin/products/${customProductId}/variants.json`;
-                let optionValues = this.getOptionValues(gryadkiSizes, supportCount, teplSizes, fields);
+                let options = this.getOptionValues(gryadkiSizes, supportCount, teplSizes, fields, imageUrl);
+                let optionsForTitle = options.filter( option => option['option_name_id'] !== 1974516);
+                let optionValues = optionsForTitle.map( option => option.value );
                 let variantTitle = optionValues.join(' / ');
 
                 let productVariant = {
@@ -246,13 +287,7 @@
                     "sku": this.getCustomSku(fields),
                     "price": this.getCustomPrice(teplSizes, supportCount, fields),
                     "quantity": fields.quantity,
-                    "options": [
-                        {"option_name_id": 1521697, "value": optionValues[0]}, //Высота
-                        {"option_name_id": 1521705, "value": optionValues[1]}, //Размер теплицы
-                        {"option_name_id": 1522016, "value": optionValues[2]}, //Цвет
-                        {"option_name_id": 1535115, "value": optionValues[3]}, //Усиленные
-                        {"option_name_id": 1966495, "value": optionValues[4]}, //Параметры теплицы
-                    ]
+                    options
                 }
 
                 let response = await axios.post(addVariantUrl, {variant: productVariant}, {auth: this.apiAuth});
@@ -260,9 +295,11 @@
                 return response.data;
             },
 
-            async loadProducts() {
-                let response = await axios.get('/collection/all.json');
+            async loadProducts(skipLoadingStatus) {
+                this.isLoading = skipLoadingStatus ? this.isLoading : true;
+                let response = await axios.get(`${this.apiHostName}/collection/all.json`);
                 this.allProducts = response.data.products;
+                this.isLoading = skipLoadingStatus ? this.isLoading : false;
             },
 
             getProductIdBySKU(sku) {
@@ -312,14 +349,14 @@
                 let isStaging = !isDev && !isProd;
 
                 if (isDev) {
-                    return 'http://localhost:8081/';
+                    return 'http://localhost:8081';
                 }
 
                 if (isStaging) {
-                    return 'http://igryadki.humanistic.tech:8081/'
+                    return 'http://igryadki.humanistic.tech:8081'
                 }
 
-                return 'https://igryadki.ru/';
+                return 'https://igryadki.ru';
             },
             skuIndex() {
                 return this.allProducts.reduce(function (skus, product) {
@@ -500,8 +537,4 @@
     width: 100%;
   }
 
-  .loadingForm {
-    opacity: 0.3;
-    pointer-events: none;
-  }
 </style>
