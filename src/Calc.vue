@@ -22,6 +22,7 @@
                         :fields="formFields[type.code]"
                         :form-type="type.code"
                         :is-loading="isLoading"
+                        :loading-message="loadingMessage"
                         v-model="orderData[type.code]"
                         @cart="addToCart"
                         @customCart="addCustomTeplicaToCart"
@@ -35,8 +36,8 @@
             </b-col>
         </b-row>
 
-        <b-row class="px-2 pt-4">
-            <b-col cols="12">
+        <b-row class="px-2">
+            <b-col cols="12" class="p-0">
                 <b-button href="/cart_items" variant="primary" size="lg" block>Оформить заказ</b-button>
             </b-col>
         </b-row>
@@ -87,6 +88,7 @@
                 tabIndex: 0,
                 error: false,
                 isLoading: false,
+                loadingMessage: false,
                 types: [
                     {code: 'gryadka', title: 'Грядка'},
                     {code: 'klumba', title: 'Клумба'},
@@ -134,6 +136,7 @@
             },
             async addCustomTeplicaToCart(gryadkiSizes, supportCount, teplSizes, fields, teplicaDetails, svgImage) {
                 this.isLoading = true;
+                this.loadingMessage = 'Идет расчет и добавление в корзину...';
                 let pngImageDataUrl = await this.svgToPngDataUrl(svgImage);
                 let pngImage = pngImageDataUrl.replace('data:image/png;base64,', '');
 
@@ -161,6 +164,7 @@
                     });
                 }
 
+                this.loadingMessage = false;
                 this.isLoading = false;
             },
             getOptionValues(gryadkiSizes, supportCount, teplSizes, fields, imageUrl) {
@@ -226,11 +230,18 @@
                 let baseArea = width * height;
                 let customArea = customWidth * customHeight;
 
-                let customPrice = parseFloat( (basePrice / baseArea * customArea).toFixed(2) );
+                let customPrice = parseFloat( (basePrice * 1.15 / baseArea * customArea).toFixed(2) );
 
                 return customPrice;
             },
-
+            async getCostPrice() {
+                let shortVariant = this.getProductVariant(this.sku);
+                let getFullVariantUrl = `${this.apiHostName}/admin/products/${shortVariant.product_id}/variants.json`;
+                let response = await axios.get(getFullVariantUrl, {auth: this.apiAuth});
+                let variants = response.data;
+                let fullVariant = variants.find( currentVariant => currentVariant.id === shortVariant.id );
+                return fullVariant && fullVariant.cost_price ? fullVariant.cost_price : false;
+            },
             svgToPngDataUrl(svgImage) {
                 return new Promise(resolve => {
                     let canvas = document.createElement("canvas");
@@ -286,6 +297,7 @@
                     "product_id": customProductId,
                     "sku": this.getCustomSku(fields),
                     "price": this.getCustomPrice(teplSizes, supportCount, fields),
+                    "cost_price": await this.getCostPrice(),
                     "quantity": fields.quantity,
                     options
                 }
@@ -297,8 +309,10 @@
 
             async loadProducts(skipLoadingStatus) {
                 this.isLoading = skipLoadingStatus ? this.isLoading : true;
+                this.loadingMessage = skipLoadingStatus ? this.loadingMessage : 'Идет загрузка данных...';
                 let response = await axios.get(`${this.apiHostName}/collection/all.json`);
                 this.allProducts = response.data.products;
+                this.loadingMessage = skipLoadingStatus ? this.loadingMessage : false;
                 this.isLoading = skipLoadingStatus ? this.isLoading : false;
             },
 
@@ -437,6 +451,9 @@
                         if (formData['bort'] && formData['teplica']) {
                             let tepliceCode = formData['teplica'].replace("x", "");
                             extend = '' + formData['bort'] + tepliceCode;
+                            if (formData['type'] === 'hard') {
+                                extend += 'У';
+                            }
                         }
                         break;
                 }

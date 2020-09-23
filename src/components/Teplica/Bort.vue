@@ -22,7 +22,12 @@
 <script>
     export default {
         name: "Bort",
-        props: ['w', 'h', 'x', 'y', 'text'],
+        props: ['w', 'h', 'x', 'y', 'text', 'bottom'],
+        data() {
+            return {
+                textSize: 4,
+            }
+        },
         computed: {
             isVertical() {
                 return this.w < this.h;
@@ -36,6 +41,15 @@
                 if (this.isVertical) {
                     let rotateAngleDeg = 360 - 90;
                     transform = `rotate(${rotateAngleDeg})`;
+                }
+                else {
+                    if (this.h <= this.textSize) {
+                        let shiftDown = this.y + this.textSize < this.bottom / 2;
+
+                        transform = shiftDown
+                            ? `translate(0, ${this.textSize})`
+                            : `translate(0, -${this.textSize})`;
+                    }
                 }
 
                 return {
@@ -63,7 +77,7 @@
                     'text': {
                         'font-style': 'normal',
                         'font-weight': 'normal',
-                        'font-size': '4px',
+                        'font-size': this.textSize + 'px',
                         'line-height': '125%',
                         'font-family': 'Sans',
                         'letter-spacing': '0px',

@@ -1,7 +1,7 @@
 <template>
-    <div class="color-input d-flex">
+    <div class="color-input d-flex flex-wrap">
         <b-dropdown variant="outline-primary"
-                class="color-dropdown color-text mb-2"
+                class="color-dropdown color-text mb-2 mr-2"
                 :text="selectedColor ? selectedColor.title : noColor.title"
         >
             <template v-slot:default="{hide}">
@@ -16,7 +16,7 @@
                         <a v-for="colorData in getGroupColors(groupName)" :key="colorData.code"
                                 :class="'dropdown-item '+colorData.class"
                                 href="#"
-                                @click.stop="selectColor(colorData, hide)"
+                                @click.stop.prevent="selectColor(colorData, hide)"
                         >
                             <span v-if="groupName === 'Рисунок'">&nbsp;</span>
                         </a>
@@ -25,7 +25,7 @@
             </template>
         </b-dropdown>
 
-        <div class="color-text ml-2">
+        <div class="color-text">
             <div class="selected-color" :class="selectedColor ? selectedColor.class : ''"><span>&nbsp;</span></div>
         </div>
     </div>

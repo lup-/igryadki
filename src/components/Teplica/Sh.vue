@@ -2,6 +2,7 @@
     <div class="scheme-sh">
         <svg
                 v-if="dataCorrect"
+                preserveAspectRatio="xMinYMin meet"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -33,7 +34,7 @@
                     :style="getStyle(['teplica-inner'])"
                 />
 
-                <bort v-for="bort in splitBortsPx" :key="'bort'+bort.id" v-bind="bort"/>
+                <bort v-for="bort in splitBortsPx" :key="'bort'+bort.id" v-bind="bort" :bottom="baseHeightPx"/>
 
                 <rect id="g1_bottom_bort" class="handler movable view-only-bort"
                         :width="bortsPx[0]['bottom'].w"

@@ -1,93 +1,101 @@
 <template>
     <b-form class="mt-4" :class="{'loadingForm': isLoading}">
-        <b-form-row v-for="(field, index) in fields" :key="field.code+index"
-                class="mb-2"
-        >
-            <b-col cols="12" sm="2">
-                <label class="col-form-label">{{getFieldTitle(field)}}</label>
-            </b-col>
-            <b-col cols="12" sm="10">
-                <radio-input v-if="field.type === 'radio'" :values="getFieldValues(field)" v-model="values[field.code]">
-                    <template v-slot:append v-if="formType === 'teplica' && field.code === 'teplica' && values.form === 'Ш'">
-                        <label
-                                class="btn btn-outline-primary ml-md-4"
-                                :class="{'active': showCustomSize}"
-                                @click="toggleCustomSize"
-                        >Свой размер</label>
-                    </template>
-                </radio-input>
-                <color-input v-else-if="field.type === 'color'" v-model="values[field.code]"></color-input>
-                <int-input v-else-if="field.type === 'int'" v-model="values[field.code]"></int-input>
+        <div v-for="(field, index) in fields" :key="field.code+index">
+            <b-form-row class="mb-2">
+                <b-col cols="12" sm="2">
+                    <label class="col-form-label">{{getFieldTitle(field)}}</label>
+                </b-col>
+                <b-col cols="12" sm="10">
+                    <radio-input v-if="field.type === 'radio'" :values="getFieldValues(field)" v-model="values[field.code]">
+                        <template v-slot:append v-if="formType === 'teplica' && field.code === 'teplica' && values.form === 'Ш'">
+                            <label
+                                    class="btn btn-outline-primary ml-md-4"
+                                    :class="{'active': showCustomSize}"
+                                    @click="toggleCustomSize"
+                            >Свой размер</label>
+                        </template>
+                    </radio-input>
+                    <color-input v-else-if="field.type === 'color'" v-model="values[field.code]"></color-input>
+                    <int-input v-else-if="field.type === 'int'" v-model="values[field.code]"></int-input>
+                </b-col>
+            </b-form-row>
 
-                <div v-if="formType === 'teplica' && field.code === 'teplica' && showCustomSize" class="mt-2">
-                    <b-form-row class="mb-2">
-                        <b-col cols="12" sm="2">Установка</b-col>
-                        <b-col cols="12" sm="10">
-                            <radio-input :values="foundationType" v-model="foundationCode"></radio-input>
-                        </b-col>
-                    </b-form-row>
-                    <b-form-row class="mb-2">
-                        <b-col cols="12" sm="2"><label class="col-form-label">Ширина</label></b-col>
-                        <b-col cols="12" sm="10">
-                            <div role="group">
-                                <int-input v-model="teplSizes['Ш'][0]" :min="minWidth" :max="teplicaSize.width - foundationDelta"></int-input>
-                                <b-form-text>от {{ minWidth }} до {{ teplicaSize.width - foundationDelta }} см</b-form-text>
-                            </div>
-                        </b-col>
-                    </b-form-row>
-                    <b-form-row class="mb-2">
-                        <b-col cols="12" sm="2"><label class="col-form-label">Длина</label></b-col>
-                        <b-col cols="12" sm="10">
-                            <div role="group">
-                                <int-input v-model="teplSizes['Ш'][1]" :min="minHeight" :max="1000 - foundationDelta"></int-input>
-                                <b-form-text>от {{ minHeight }} до {{ teplicaSize.height - foundationDelta }} см</b-form-text>
-                            </div>
-                        </b-col>
-                    </b-form-row>
-                    <b-form-row class="mb-2">
-                        <b-col cols="12" sm="2"></b-col>
-                        <b-col cols="12" sm="10">
-                            <teplica-sh
-                                    v-model="calcData"
+            <div v-if="formType === 'teplica' && field.code === 'teplica' && showCustomSize" class="mt-2">
+                <b-form-row class="mb-2">
+                    <b-col cols="12" sm="2">Установка</b-col>
+                    <b-col cols="12" sm="10">
+                        <radio-input :values="foundationType" v-model="foundationCode"></radio-input>
+                    </b-col>
+                </b-form-row>
+                <b-form-row class="mb-2">
+                    <b-col cols="12" sm="2"><label class="col-form-label">Ширина</label></b-col>
+                    <b-col cols="12" sm="10">
+                        <div role="group">
+                            <int-input v-model="teplSizes['Ш'][0]" :min="minWidth" :max="teplicaSize.width - foundationDelta"></int-input>
+                            <b-form-text>от {{ minWidth }} до {{ teplicaSize.width - foundationDelta }} см</b-form-text>
+                        </div>
+                    </b-col>
+                </b-form-row>
+                <b-form-row class="mb-2">
+                    <b-col cols="12" sm="2"><label class="col-form-label">Длина</label></b-col>
+                    <b-col cols="12" sm="10">
+                        <div role="group">
+                            <int-input v-model="teplSizes['Ш'][1]" :min="minHeight" :max="1000 - foundationDelta"></int-input>
+                            <b-form-text>от {{ minHeight }} до {{ teplicaSize.height - foundationDelta }} см</b-form-text>
+                        </div>
+                    </b-col>
+                </b-form-row>
+                <b-form-row class="mb-2">
+                    <b-col cols="12" sm="2"></b-col>
+                    <b-col cols="12" sm="10">
+                        <teplica-sh
+                                v-model="calcData"
 
-                                    :base-width="teplicaSize.baseWidth"
-                                    :base-height="teplicaSize.baseHeight"
-                                    :full-width="teplicaSize.width"
-                                    :full-height="teplicaSize.height"
-                                    :supports="supports"
-                            ></teplica-sh>
-                        </b-col>
-                    </b-form-row>
-                    <b-form-row class="">
-                        <b-col cols="12" sm="2">Дополнительные стяжки</b-col>
-                        <b-col cols="12" sm="3">
-                            <div role="group" class="mr-2">
-                                <int-input v-model="supports[0]" :min="0" :max="maxSupports[0]"></int-input>
-                                <b-form-text>максимально: {{maxSupports[0]}}</b-form-text>
-                            </div>
-                        </b-col>
-                        <b-col cols="12" sm="3" class="mr-2">
-                            <div role="group">
-                                <int-input v-model="supports[1]" :min="0" :max="maxSupports[1]"></int-input>
-                                <b-form-text>максимально: {{maxSupports[1]}}</b-form-text>
-                            </div>
-                        </b-col>
-                        <b-col cols="12" sm="3">
-                            <div role="group">
-                                <int-input v-model="supports[2]" :min="0" :max="maxSupports[2]"></int-input>
-                                <b-form-text>максимально: {{maxSupports[2]}}</b-form-text>
-                            </div>
-                        </b-col>
-                    </b-form-row>
-                </div>
-            </b-col>
-        </b-form-row>
+                                :base-width="teplicaSize.baseWidth"
+                                :base-height="teplicaSize.baseHeight"
+                                :full-width="teplicaSize.width"
+                                :full-height="teplicaSize.height"
+                                :supports="supports"
+                        ></teplica-sh>
+                    </b-col>
+                </b-form-row>
+                <b-form-row class="">
+                    <b-col cols="12" sm="2">Дополнительные стяжки</b-col>
+                    <b-col cols="12" sm="3">
+                        <div role="group" class="mr-2">
+                            <int-input v-model="supports[0]" :min="0" :max="maxSupports[0]"></int-input>
+                            <b-form-text>максимально: {{maxSupports[0]}}</b-form-text>
+                        </div>
+                    </b-col>
+                    <b-col cols="12" sm="3" class="mr-2">
+                        <div role="group">
+                            <int-input v-model="supports[1]" :min="0" :max="maxSupports[1]"></int-input>
+                            <b-form-text>максимально: {{maxSupports[1]}}</b-form-text>
+                        </div>
+                    </b-col>
+                    <b-col cols="12" sm="3">
+                        <div role="group">
+                            <int-input v-model="supports[2]" :min="0" :max="maxSupports[2]"></int-input>
+                            <b-form-text>максимально: {{maxSupports[2]}}</b-form-text>
+                        </div>
+                    </b-col>
+                </b-form-row>
+            </div>
+        </div>
         <b-form-row class="my-4">
             <b-button class="btn-cart" variant="primary" size="lg" block :disabled="!formIsFilled || isLoading" @click="addToCart">
-                В корзину
+                {{isLoading && loadingMessage ? loadingMessage : 'В корзину'}}
                 <div class="loader" v-if="isLoading"></div>
             </b-button>
         </b-form-row>
+
+        <b-modal id="confirm-modal" title="Добавлиение в корзину" v-model="showConfirm" @close="confirmResult = false">
+            <p class="my-4">Пожалуйста проверьте, верно ли указаны размеры?</p>
+            <template v-slot:modal-footer>
+                <b-button variant="outline-secondary" size="sm" @click="confirmResult = false" class="mr-2">Посмотрю еще раз</b-button>
+                <b-button variant="primary" @click="confirmResult = true">Да, все верно</b-button>
+            </template>
+        </b-modal>
     </b-form>
 </template>
 
@@ -104,7 +112,7 @@
 
     export default {
         name: "OrderForm",
-        props: ['fields', 'formType', 'isLoading'],
+        props: ['fields', 'formType', 'isLoading', 'loadingMessage'],
         components: {ColorInput, RadioInput, IntInput, TeplicaSh},
         data() {
             let values = this.fields.reduce( (aggr, fieldData) => {
@@ -117,6 +125,8 @@
             values['what'] = this.formType;
 
             return {
+                showConfirm: false,
+                confirmResult: null,
                 showCustomSize: false,
                 customSize: false,
                 customDetails: false,
@@ -265,10 +275,29 @@
                 let height = parseInt(hM) * 100;
                 return {width, height};
             },
-            addToCart() {
+            confirm() {
+                this.showConfirm = true;
+                return new Promise( resolve => {
+                    let intervalId;
+                    intervalId = setInterval(() => {
+                        if (this.confirmResult !== null) {
+                            let isConfirmed = this.confirmResult;
+
+                            clearInterval(intervalId);
+                            this.showConfirm = false;
+                            this.confirmResult = null;
+                            resolve(isConfirmed);
+                        }
+                    }, 1);
+                });
+            },
+            async addToCart() {
                 if (this.showCustomSize) {
                     let teplSizes = this.teplSizes[ this.values.form ];
-                    this.$emit('customCart', this.customSize, this.supports, teplSizes, this.values, this.customDetails, this.customSvgImage);
+                    let isConfirmed = await this.confirm();
+                    if (isConfirmed) {
+                        this.$emit('customCart', this.customSize, this.supports, teplSizes, this.values, this.customDetails, this.customSvgImage);
+                    }
                 }
                 else {
                     this.$emit('cart', this.values);
