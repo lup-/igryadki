@@ -131,6 +131,7 @@
                     :center-x="handler.x"
                     :center-y="handler.y"
                     :vertical="handler.vertical"
+                    :show-arrow="!movedByUser"
                 ></handler>
 
                 <path v-for="(support, index) in supportD" :d="support" :id="'gx_support_'+index" :key="'gx_support_'+index"  :style="getStyle(['support'])"/>
@@ -174,6 +175,7 @@
             let minVhSizeCm = 30;
 
             return {
+                movedByUser: false,
                 pixelToCm,
                 cmToPixel,
                 bortPixelToCm,
@@ -342,6 +344,7 @@
                 let newPt;
 
                 const updateFn = () => {
+                    this.movedByUser = true;
                     let isNotSwappedLengthWidth = grIndex !== 3;
                     let isVertical = ['bottom', 'bottomLeft', 'bottomRight'].indexOf(arrowType) !== -1;
                     if (moving) {

@@ -17,6 +17,12 @@ export default {
             code: 'bort',
             title: 'Высота борта',
             type: 'radio',
+            filter: function (value) {
+                let isHard = this.values['type'] === 'hard';
+                return isHard
+                    ? value.value > 14
+                    : true;
+            },
             values: [
                 {value: 14, title: '14 см'},
                 {value: 19, title: '19 см'},
@@ -195,6 +201,12 @@ export default {
             code: 'bort',
             title: 'Высота борта',
             type: 'radio',
+            filter: function (value) {
+                let isHard = this.values['type'] === 'hard';
+                return isHard
+                    ? value.value > 14
+                    : true;
+            },
             values: [
                 {value: 14, title: '14 см'},
                 {value: 19, title: '19 см'},

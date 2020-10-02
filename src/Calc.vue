@@ -224,13 +224,13 @@
                 return `${skuBase}-${fields.bort}${width}${height}`;
             },
             getCustomPrice(teplSizes, supportCount, fields) {
-                let basePrice = this.price;
+                let basePrice = this.oldPrice;
                 let {width, height} = this.getTeplicaSizes(fields);
                 let [customWidth, customHeight] = teplSizes;
                 let baseArea = width * height;
                 let customArea = customWidth * customHeight;
 
-                let customPrice = parseFloat( (basePrice * 1.15 / baseArea * customArea).toFixed(2) );
+                let customPrice = parseFloat( (basePrice / baseArea * customArea).toFixed(2) );
 
                 return customPrice;
             },
@@ -483,6 +483,17 @@
                 let quantity = this.formData['quantity'];
 
                 return variant ? variant.price * quantity: false;
+            },
+            oldPrice() {
+                let isProductsLoaded = this.allProducts.length > 0;
+                if (!isProductsLoaded) {
+                    return false;
+                }
+
+                let variant = this.getProductVariant(this.sku);
+                let quantity = this.formData['quantity'];
+
+                return variant ? variant.old_price * quantity: false;
             },
             printPrice() {
                 return this.formData.custom

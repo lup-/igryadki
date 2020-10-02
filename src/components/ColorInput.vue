@@ -5,7 +5,7 @@
                 :text="selectedColor ? selectedColor.title : noColor.title"
         >
             <template v-slot:default="{hide}">
-                <a class="dropdown-item" href="#" @click.stop="selectColor(noColor, hide)">{{noColor.title}}</a>
+                <a class="dropdown-item" href="#" @click.stop.prevent="selectColor(noColor, hide)">{{noColor.title}}</a>
                 <li class="dropdown-item submenu" v-for="groupName in groups" :key="groupName"
                         :class="{'active': isHovering(groupName)}"
                         @mouseover="hoverGroup(groupName, true)"
@@ -76,54 +76,7 @@
         },
         computed: {
             css() {
-                let customCss = `
-                .selected-color {
-                    display: inline-block;
-                    border: 1px solid #ced4da;
-                    border-radius: 0.25rem;
-                    min-height: calc(2.25rem + 2px);
-                    min-width: 5rem;
-                    padding: .375rem .75rem;
-                }
-
-                .color-row .dropdown-toggle,
-                .color-dropdown > .dropdown-menu,
-                .selected-color {
-                    min-width: 10rem;
-                }
-
-                .dropdown-menu .dropdown-menu {
-                    top: auto;
-                    left: 100%;
-                    transform: translateY(-2rem);
-                }
-
-                .dropdown-item + .dropdown-menu {
-                    display: block;
-                    opacity: 0;
-                    transition: opacity .3s 1s;
-                }
-
-                .dropdown-item.submenu::after {
-                    content: '▸';
-                    margin-left: 0.5rem;
-                }
-
-                .dropdown-item:hover + .dropdown-menu,
-                .dropdown-item.active .dropdown-menu {
-                    opacity: 1;
-                    transition: opacity .3s .1s;
-                    display: block;
-                }
-
-                .colorbg:before {content: '\\00a0';}
-
-                .colorbg.bg-1 {background: url(https://igryadki.ru/admin2/assets/169274890) repeat;}
-                .colorbg.bg-2 {background: url(https://igryadki.ru/admin2/assets/169275269) repeat;}
-                .colorbg.bg-3 {background: url(https://igryadki.ru/admin2/assets/169275276) repeat;}
-                .colorbg.bg-4 {background: url(https://igryadki.ru/admin2/assets/169275445) repeat;}
-                .colorbg.bg-5 {background: url(https://igryadki.ru/admin2/assets/169275446) repeat;}
-                `;
+                let customCss = ``;
 
                 this.colors.map( (colorData) => {
                     if (colorData.bgColor) {
@@ -155,4 +108,51 @@
 </script>
 
 <style scoped>
+    .selected-color {
+        display: inline-block;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        min-height: calc(2.25rem + 2px);
+        min-width: 5rem;
+        padding: .375rem .75rem;
+    }
+
+    .color-row .dropdown-toggle,
+    .color-dropdown > .dropdown-menu,
+    .selected-color {
+        min-width: 10rem;
+    }
+
+    .dropdown-menu .dropdown-menu {
+        top: auto;
+        left: 100%;
+        transform: translateY(-2rem);
+    }
+
+    .dropdown-item + .dropdown-menu {
+        display: block;
+        opacity: 0;
+        transition: opacity .3s 1s;
+    }
+
+    .dropdown-item.submenu::after {
+        content: '▸';
+        margin-left: 0.5rem;
+    }
+
+    .dropdown-item:hover + .dropdown-menu,
+    .dropdown-item.active .dropdown-menu {
+        opacity: 1;
+        transition: opacity .3s .1s;
+        display: block;
+    }
+
+    .colorbg:before {content: '\00a0';}
+
+
+    .colorbg.bg-1 {background: url(https://static-ru.insales.ru/files/1/4222/13750398/original/bg-5-sm.jpg) repeat;}
+    .colorbg.bg-2 {background: url(https://static-ru.insales.ru/files/1/4225/13750401/original/bg-3-sm.jpg) repeat;}
+    .colorbg.bg-3 {background: url(https://static-ru.insales.ru/files/1/4221/13750397/original/bg-1-sm.jpg) repeat;}
+    .colorbg.bg-4 {background: url(https://static-ru.insales.ru/files/1/4223/13750399/original/bg-2-sm.jpg) repeat;}
+    .colorbg.bg-5 {background: url(https://static-ru.insales.ru/files/1/4220/13750396/original/bg-4-sm.jpg) repeat;}
 </style>
