@@ -2,7 +2,8 @@
     <b-container class="p-2">
         <b-row class="calc-header m-0 mb-4 p-2" no-gutters>
             <b-col cols="12" sm="6">
-                <label>Артикул: <span class="sku">{{printSku || '-'}}</span></label>
+                <label>Артикул: <span class="sku">{{printSku || '-'}}</span></label><br>
+                <label>Вес: <span class="sku">{{printWeight || '-'}}</span></label>
             </b-col>
             <b-col cols="12" sm="6" class="text-sm-right sticky-price">
                 <h4>
@@ -351,6 +352,18 @@
                 }
 
                 return parseInt(code.replace(/[a-z\- ]+/i,''));
+            },
+
+            getVariantPropMultipliedByQuality(propName) {
+                let isProductsLoaded = this.allProducts.length > 0;
+                if (!isProductsLoaded) {
+                    return false;
+                }
+
+                let variant = this.getProductVariant(this.sku);
+                let quantity = this.formData['quantity'];
+
+                return variant ? variant[propName] * quantity: false;
             }
         },
         computed: {
@@ -474,32 +487,24 @@
                     : this.sku;
             },
             price() {
-                let isProductsLoaded = this.allProducts.length > 0;
-                if (!isProductsLoaded) {
-                    return false;
-                }
-
-                let variant = this.getProductVariant(this.sku);
-                let quantity = this.formData['quantity'];
-
-                return variant ? variant.price * quantity: false;
+                return this.getVariantPropMultipliedByQuality('price');
             },
             oldPrice() {
-                let isProductsLoaded = this.allProducts.length > 0;
-                if (!isProductsLoaded) {
-                    return false;
-                }
-
-                let variant = this.getProductVariant(this.sku);
-                let quantity = this.formData['quantity'];
-
-                return variant ? variant.old_price * quantity: false;
+                return this.getVariantPropMultipliedByQuality('old_price');
             },
+            weight() {
+                return this.getVariantPropMultipliedByQuality('weight');
+            },
+
             printPrice() {
                 return this.formData.custom
                     ? this.getCustomPrice( this.formData.teplSizes, this.formData.supports, this.formData )
                     : this.price;
             },
+            printWeight() {
+                return this.weight ? this.weight + ' кг' : false;
+            },
+
             tabCode() {
                 return this.types[this.tabIndex].code;
             }
@@ -518,8 +523,10 @@
   }
 
   .container {
-    margin-bottom: 5rem!important;
+    margin-bottom: 0rem!important;
   }
+
+  .row.grid-12 {margin-left:15px;margin-right: 15px;}
 
   .btn-primary,
   .nav-pills .nav-link.active {
