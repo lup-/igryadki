@@ -224,16 +224,8 @@
                 let skuBase = skuBases[ fields.form ];
                 return `${skuBase}-${fields.bort}${width}${height}`;
             },
-            getCustomPrice(teplSizes, supportCount, fields) {
-                let basePrice = this.oldPrice;
-                let {width, height} = this.getTeplicaSizes(fields);
-                let [customWidth, customHeight] = teplSizes;
-                let baseArea = width * height;
-                let customArea = customWidth * customHeight;
-
-                let customPrice = parseFloat( (basePrice / baseArea * customArea).toFixed(2) );
-
-                return customPrice;
+            getCustomPrice() {
+                return Math.round(this.price / 0.9);
             },
             async getCostPrice() {
                 let shortVariant = this.getProductVariant(this.sku);
