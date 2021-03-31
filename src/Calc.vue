@@ -303,8 +303,19 @@
             async loadProducts(skipLoadingStatus) {
                 this.isLoading = skipLoadingStatus ? this.isLoading : true;
                 this.loadingMessage = skipLoadingStatus ? this.loadingMessage : 'Идет загрузка данных...';
-                let response = await axios.get(`${this.apiHostName}/collection/all.json`);
-                this.allProducts = response.data.products;
+
+                let loadNextPage = false;
+                let pageNum = 1;
+                let allProducts = [];
+                do {
+                    let response = await axios.get(`${this.apiHostName}/collection/all.json?page=${pageNum}&page_size=100`);
+                    loadNextPage = response.data.products && response.data.products.length > 0;
+                    pageNum++;
+                    allProducts = allProducts.concat(response.data.products);
+                } while (loadNextPage)
+
+
+                this.allProducts = allProducts;
                 this.loadingMessage = skipLoadingStatus ? this.loadingMessage : false;
                 this.isLoading = skipLoadingStatus ? this.isLoading : false;
             },
