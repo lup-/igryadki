@@ -15,7 +15,7 @@
                             >Свой размер</label>
                         </template>
                     </radio-input>
-                    <color-input v-else-if="field.type === 'color'" v-model="values[field.code]"></color-input>
+                    <color-input v-else-if="field.type === 'color'" v-model="values[field.code]" :filter="values[field.code].filter || null"></color-input>
                     <int-input v-else-if="field.type === 'int'" v-model="values[field.code]"></int-input>
                 </b-col>
             </b-form-row>
@@ -83,13 +83,13 @@
             </div>
         </div>
         <b-form-row class="my-4">
-            <b-button class="btn-cart" variant="primary" size="lg" block :disabled="!formIsFilled || isLoading" @click="addToCart">
+            <b-button class="btn-cart" variant="primary" size="lg" block :disabled="!canAddToCart" @click="addToCart">
                 {{isLoading && loadingMessage ? loadingMessage : 'В корзину'}}
                 <div class="loader" v-if="isLoading"></div>
             </b-button>
         </b-form-row>
 
-        <b-modal id="confirm-modal" title="Добавлиение в корзину" v-model="showConfirm" @close="confirmResult = false">
+        <b-modal id="confirm-modal" title="Добавление в корзину" v-model="showConfirm" @close="confirmResult = false">
             <p class="my-4">Пожалуйста проверьте, верно ли указаны размеры?</p>
             <template v-slot:modal-footer>
                 <b-button variant="outline-secondary" size="sm" @click="confirmResult = false" class="mr-2">Посмотрю еще раз</b-button>
@@ -112,7 +112,7 @@
 
     export default {
         name: "OrderForm",
-        props: ['fields', 'formType', 'isLoading', 'loadingMessage'],
+        props: ['fields', 'formType', 'isLoading', 'loadingMessage', 'cartAvailable'],
         components: {ColorInput, RadioInput, IntInput, TeplicaSh},
         data() {
             let values = this.fields.reduce( (aggr, fieldData) => {
@@ -142,10 +142,17 @@
                 foundationType: [
                     {value: 'soil', title: 'На земле', deltaCm: 10},
                     {value: 'foundation', title: 'На фундаменте', deltaCm: 20},
-                ]
+                ],
+                lastBortValuesFieldShown: null
             }
         },
         watch: {
+            fields() {
+                if (this.isBortValuesFieldShown !== this.lastBortValuesFieldShown) {
+                    this.sendDataChanges();
+                    this.lastBortValuesFieldShown = this.isBortValuesFieldShown;
+                }
+            },
             values: {
                 deep: true,
                 handler() {
@@ -206,6 +213,10 @@
         methods: {
             sendDataChanges() {
                 let sendValues = clone(this.values);
+
+                if (!this.isBortValuesFieldShown) {
+                    sendValues['bortVariants'] = null;
+                }
 
                 if (this.showCustomSize) {
                     let teplSizes = this.teplSizes[ sendValues.form ];
@@ -305,6 +316,13 @@
             }
         },
         computed: {
+            canAddToCart() {
+                return this.formIsFilled && !this.isLoading && (this.showCustomSize || this.cartAvailable);
+            },
+            isBortValuesFieldShown() {
+                let bortField = this.fields.find(field => field.code === 'bortVariants');
+                return Boolean(bortField);
+            },
             formIsFilled() {
                 let allFieldCodes = this.fields.map( field => field.code );
                 let filledFieldCodes = Object.keys(this.values);

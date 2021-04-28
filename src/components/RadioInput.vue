@@ -29,7 +29,11 @@
         },
         methods: {
             isSelected(variant) {
-                return this.selected === variant.value;
+                let isObject = typeof (this.selected) === 'object' && this.selected !== null;
+
+                return isObject
+                    ? JSON.stringify(this.selected) === JSON.stringify(variant.value)
+                    : this.selected === variant.value;
             },
             emitValue() {
                 this.$emit('input', this.selected);

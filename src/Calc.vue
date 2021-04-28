@@ -20,10 +20,11 @@
                     :title="type.title"
             >
                 <order-form
-                        :fields="formFields[type.code]"
+                        :fields="formFields(type.code)"
                         :form-type="type.code"
                         :is-loading="isLoading"
                         :loading-message="loadingMessage"
+                        :cart-available="canAddToCart"
                         v-model="orderData[type.code]"
                         @cart="addToCart"
                         @customCart="addCustomTeplicaToCart"
@@ -59,6 +60,10 @@
     import formFields from "./fields";
     import colors from "./colors";
 
+    function clone(obj) {
+        return JSON.parse( JSON.stringify(obj) );
+    }
+
     function cartApiEmulator(apiHost) {
         return {
             add({items, comments}) {
@@ -90,16 +95,21 @@
                 error: false,
                 isLoading: false,
                 loadingMessage: false,
+                dpkVariants: [],
                 types: [
                     {code: 'gryadka', title: 'Грядка'},
                     {code: 'klumba', title: 'Клумба'},
                     {code: 'teplica', title: 'В теплицу'},
+                    {code: 'dpk', title: 'Грядки из ДПК'},
+                    //{code: 'board', title: 'Доска из ДПК'}
                 ],
-                formFields,
+                rawFormFields: formFields,
                 orderData: {
                     gryadka: {},
                     klumba: {},
                     teplica: {},
+                    dpk: {},
+                    //board: {},
                 },
                 allProducts: [],
                 apiAuth: {
@@ -367,9 +377,114 @@
                 let quantity = this.formData['quantity'];
 
                 return variant ? variant[propName] * quantity: false;
-            }
+            },
+
+            getDpkLengthCount() {
+                if (this.formData.what !== 'dpk') {
+                    return {count: false, length: false};
+                }
+
+                if (!this.formData.bortVariants) {
+                    let dpkVariants = this.getDpkVariants();
+                    if (dpkVariants && dpkVariants.length === 1) {
+                        let variant = dpkVariants[0];
+                        return variant.parsed;
+                    }
+
+                    return false;
+                }
+
+                return  {
+                    count: this.formData.bortVariants.count,
+                    length: this.formData.bortVariants.length
+                }
+            },
+
+            getDpkSkuMask() {
+                if (!this.formData) {
+                    return false;
+                }
+
+                if (this.formData.what !== 'dpk') {
+                    return false;
+                }
+
+                const DPK_COLOR = '9017';
+
+                let {width, height, finishing, joints} = this.formData;
+                let allParamsSet = width && height && finishing && joints;
+                if (!allParamsSet) {
+                    return false;
+                }
+
+                width = width < 100 ? '0'+width : width.toString();
+                height = Math.floor(height);
+                finishing = finishing === 'gloss' ? 'G' : 'W';
+                joints = joints === 'metal' ? 'M' : 'P';
+                let color = DPK_COLOR.replace('0', '');
+
+                return `GK${height}${width}-:count::length:-${color}-${finishing}${joints}3`;
+            },
+
+            getDpkVariants() {
+                //const LENGTH_PROPERTY_ID = 28384430;
+                let skuMask = this.getDpkSkuMask();
+                if (!skuMask) {
+                    return [];
+                }
+
+                let skuRegex = new RegExp( skuMask.replace(':count::length:', '(\\d{2})(\\d+)'), 'i' );
+                let targetLength = this.formData.length * 100;
+
+                return this.allProducts.reduce( (variants, product) => {
+                    let matchingVariants = product.variants
+                        .filter(variant => skuRegex.test(variant.sku))
+                        .map(variant => {
+                            let [, count, length] = variant.sku.match(skuRegex);
+                            let bortLength = Math.round( count * length / 2 );
+
+                            variant.parsed = {count: parseInt(count), length, bortLength};
+                            return variant;
+                        })
+                        .filter(variant => variant.parsed.bortLength === targetLength);
+
+                    if (matchingVariants && matchingVariants.length > 0) {
+                        variants = variants.concat(matchingVariants);
+                    }
+
+                    return variants;
+                }, []);
+            },
+            formFields(typeCode) {
+                if (!typeCode) {
+                    return [];
+                }
+
+                if (typeCode === 'dpk') {
+                    let dpkFields = clone(this.rawFormFields[typeCode]);
+                    let dpkVariants = this.getDpkVariants();
+
+                    let countFieldIndex = dpkFields.findIndex(field => field.code === 'bortVariants');
+                    if (countFieldIndex !== -1) {
+                        if (dpkVariants && dpkVariants.length > 1) {
+                            dpkFields[countFieldIndex].values = dpkVariants.map(variant => ({value: variant.parsed, title: `${Math.round(variant.parsed.count / 2)}x${variant.parsed.length}`}));
+                        }
+                        else {
+                            dpkFields.splice(countFieldIndex, 1);
+                        }
+                    }
+
+                    return dpkFields;
+                }
+
+                return this.rawFormFields[typeCode];
+            },
         },
         computed: {
+            canAddToCart() {
+                let variant = this.getProductVariant(this.sku);
+                return Boolean(variant) && variant.available && variant.quantity !== 0;
+            },
             formData() {
                 return this.orderData[this.tabCode];
             },
@@ -476,7 +591,26 @@
 
                 return extend;
             },
+            dpkSku() {
+                let {count, length} = this.getDpkLengthCount();
+                if (!count) {
+                    return false;
+                }
+
+                count = '0' + count;
+                length = length < 100 ? '0'+length : length.toString();
+
+                let sku = this.getDpkSkuMask();
+                sku = sku.replace(':count:', count);
+                sku = sku.replace(':length:', length);
+
+                return sku;
+            },
             sku() {
+                if (this.formData.what === 'dpk') {
+                    return this.dpkSku;
+                }
+
                 if (this.skuBase && this.skuExtend) {
                     return  `${this.skuBase}-${this.skuExtend}`;
                 }

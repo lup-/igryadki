@@ -220,4 +220,103 @@ export default {
             default: 1,
         },
     ],
+    dpk: [
+        {
+            code: 'height',
+            title: 'Высота доски',
+            type: 'radio',
+            values: [
+                {value: 15, title: '15 см'},
+                {value: 22.5, title: '22.5 см'},
+                {value: 30, title: '30 см'},
+            ]
+        },
+        {
+            code: 'width',
+            title: 'Ширина',
+            type: 'radio',
+            values: [
+                {value: 50, title: '50 см'},
+                {value: 75, title: '75 см'},
+                {value: 100, title: '100 см'},
+            ]
+        },
+        {
+            code: 'length',
+            title: 'Длина',
+            type: 'radio',
+            values: [
+                {value: 1, title: '1 м'},
+                {value: 2, title: '2 м'},
+                {value: 3, title: '3 м'},
+                {value: 4, title: '4 м'},
+                {value: 5, title: '5 м'},
+                {value: 6, title: '6 м'},
+                {value: 7, title: '7 м'},
+                {value: 8, title: '8 м'},
+                {value: 9, title: '9 м'},
+                {value: 10, title: '10 м'},
+            ]
+        },
+        {
+            code: 'joints', title: 'Соединение', type: 'radio',
+            values: [
+                {value: 'plastic', title: 'Пластик'},
+                {value: 'metal', title: 'Металл'},
+            ]
+        },
+        {
+            code: 'finishing', title: 'Обработка', type: 'radio',
+            values: [
+                {value: 'gloss', title: 'Глянец'},
+                {value: 'polish', title: 'Шлифовка'},
+            ]
+        },
+        {
+            code: 'bortVariants', title: 'Количество бортов в длину', type: 'radio',
+            values: []
+        },
+        {
+            code: 'quantity',
+            title: 'Количество',
+            type: 'int',
+            default: 1,
+        },
+    ],
+    board: [
+        {
+            code: 'width',
+            title: 'Ширина доски',
+            type: 'radio',
+            values: [
+                {value: 15, title: '15 см'},
+                {value: 22.5, title: '22.5 см'},
+                {value: 30, title: '30 см'},
+            ]
+        },
+        {
+            code: 'length',
+            title: 'Длина',
+            type: 'radio',
+            values: [
+                {value: 1, title: '1 м'},
+                {value: 2, title: '2 м'},
+                {value: 3, title: '3 м'},
+                {value: 4, title: '4 м'},
+                {value: 5, title: '5 м'},
+                {value: 6, title: '6 м'},
+                {value: 7, title: '7 м'},
+                {value: 8, title: '8 м'},
+                {value: 9, title: '9 м'},
+                {value: 10, title: '10 м'},
+            ]
+        },
+        {
+            code: 'finishing', title: 'Обработка', type: 'radio',
+            values: [
+                {value: 'gloss', title: 'Глянец'},
+                {value: 'polish', title: 'Шлифовка'},
+            ]
+        },
+    ]
 }

@@ -36,7 +36,7 @@
 
     export default {
         name: "ColorInput",
-        props: ['value'],
+        props: ['value', 'filter'],
         data() {
             let selectedColor = false;
 
@@ -47,7 +47,7 @@
             return {
                 hovering: {},
                 selectedColor,
-                colors
+                rawColors: colors,
             }
         },
         methods: {
@@ -75,6 +75,14 @@
             }
         },
         computed: {
+            colors() {
+                if (this.filter) {
+                    return this.rawColors.filter(this.filter.bind(this));
+                }
+                else {
+                    return this.rawColors;
+                }
+            },
             css() {
                 let customCss = ``;
 
