@@ -25,6 +25,8 @@
                         :is-loading="isLoading"
                         :loading-message="loadingMessage"
                         :cart-available="canAddToCart"
+                        :sku-constructed="Boolean(printSku)"
+                        :price-found="Boolean(printPrice)"
                         v-model="orderData[type.code]"
                         @cart="addToCart"
                         @customCart="addCustomTeplicaToCart"
@@ -100,7 +102,7 @@
                     {code: 'gryadka', title: 'Грядка'},
                     {code: 'klumba', title: 'Клумба'},
                     {code: 'teplica', title: 'В теплицу'},
-                    {code: 'dpk', title: 'Грядки из ДПК'},
+                    //{code: 'dpk', title: 'Грядки из ДПК'},
                     //{code: 'board', title: 'Доска из ДПК'}
                 ],
                 rawFormFields: formFields,
@@ -116,8 +118,9 @@
                     //username: '9743441fcdaa238439536e2f4c9ea9ba',
                     //password: 'eca58da341ccff33149e9add13e6161c'
                     username: 'igryadki@gmail.com',
-                    password: 'HCZwa3al2'
-                }
+                    password: 'HCZwa3al22023'
+                },
+                bortCount: 6,
             }
         },
         components: {
@@ -235,7 +238,7 @@
                 return `${skuBase}-${fields.bort}${width}${height}`;
             },
             getCustomPrice() {
-                return Math.round(this.price / 0.9);
+                return Math.round(this.price * 1.3);
             },
             async getCostPrice() {
                 let shortVariant = this.getProductVariant(this.sku);
@@ -317,9 +320,14 @@
                 let loadNextPage = false;
                 let pageNum = 1;
                 let allProducts = [];
+                let pageSize = 100;
                 do {
-                    let response = await axios.get(`${this.apiHostName}/collection/all.json?page=${pageNum}&page_size=100`);
-                    loadNextPage = response.data.products && response.data.products.length > 0;
+                    let response = await axios.get(`${this.apiHostName}/collection/all.json?page=${pageNum}&page_size=${pageSize}`);
+                    let loadedCount = response.data.products && response.data.products.length;
+                    loadNextPage = loadedCount > 0;
+                    if (loadedCount < pageSize) {
+                        loadNextPage = false;
+                    }
                     pageNum++;
                     allProducts = allProducts.concat(response.data.products);
                 } while (loadNextPage)
@@ -365,6 +373,19 @@
                 }
 
                 return parseInt(code.replace(/[a-z\- ]+/i,''));
+            },
+
+            getColorIdFromCode(code) {
+                if (!code) {
+                    return '000';
+                }
+
+                let color = colors.find( color => color.code === code );
+                if (!color) {
+                    return '000';
+                }
+
+                return color.id;
             },
 
             getVariantPropMultipliedByQuality(propName) {
@@ -494,11 +515,11 @@
                 let isStaging = !isDev && !isProd;
 
                 if (isDev) {
-                    return 'http://localhost:8081';
+                    return 'http://igryadki.humanistic.tech';
                 }
 
                 if (isStaging) {
-                    return 'http://igryadki.humanistic.tech:8081'
+                    return 'http://igryadki.humanistic.tech'
                 }
 
                 return 'https://igryadki.ru';
@@ -507,7 +528,15 @@
                 return this.allProducts.reduce(function (skus, product) {
                     product.variants.map(function (variant) {
                         if (variant.sku) {
-                            skus[variant.sku] = product.id;
+                            let sku = variant.sku
+                                .replace('К', 'K') //рус/анг
+                                .replace('М', 'M')
+                                .replace('О', 'O')
+                                .replace('Е', 'E')
+                                .replace('Р', 'P')
+                                .replace('С', 'C');
+
+                            skus[sku] = product.id;
                         }
                     });
 
@@ -542,6 +571,30 @@
                     whatForSKU = 'klumbaSquare';
                 }
 
+                if (whatForSKU === 'klumba' && formData['legs'] === 1) {
+                    let length = Math.round(formData['diameter'] / 2);
+                    if (!length) {
+                        return false;
+                    }
+
+                    if (!formData['bort']) {
+                        return false;
+                    }
+
+                    if (formData['levels'] === 1) {
+                        length = length < 100 ? '0' + length : length.toString();
+                        return 'KM'+formData['bort']+length; //KM -- англ
+                    }
+
+                    if (formData['levels'] === 3) {
+                        let bortCount = this.bortCount;
+                        bortCount = bortCount < 10 ? '0' + bortCount : bortCount.toString();
+                        return 'KM'+formData['levels']+bortCount+formData['bort'];
+                    }
+
+                    return false;
+                }
+
                 let sku = baseSKUs[whatForSKU];
                 let colorNum = this.getColorNumberFromCode(formData['color']);
                 let levelsCoeff = 0;
@@ -574,7 +627,41 @@
                         }
                         break;
                     case 'klumba':
-                        if (formData['bort'] && formData['diameter']) {
+                        if (formData['legs'] === 1 && formData['form'] !== 'square') {
+                            let length = Math.round(formData['diameter'] / 2);
+                            let bortCount = this.bortCount;
+                            let colorNum = this.getColorIdFromCode(formData['color']);
+                            if (formData['levels'] > 1) {
+                                let klumbaFields = this.formFields('klumba');
+                                let diameterField = klumbaFields.find(field => field.code === 'diameter');
+                                let diameterVariants = diameterField.values.filter(value => value.levels === formData['levels']);
+                                let selectedValue = diameterVariants.find(variant => variant.value === formData['diameter']);
+                                if (!selectedValue) {
+                                    return false;
+                                }
+
+                                let levelDiameters = selectedValue.title.replace(' см', '').split('-');
+
+                                let levelsSku = [];
+                                for (let levelDiameter of levelDiameters) {
+                                    levelDiameter = parseInt(levelDiameter);
+                                    let diameterSku = levelDiameter < 100 ? '0' + levelDiameter : levelDiameter.toString();
+                                    levelDiameter -= 60;
+                                    levelsSku.push(diameterSku);
+                                }
+
+                                levelsSku.push(colorNum);
+                                return levelsSku.join('-');
+                            }
+                            else {
+                                if (length) {
+                                    length = length < 100 ? '0' + length : length.toString();
+                                    bortCount = bortCount < 10 ? '0' + bortCount : bortCount.toString();
+                                    extend = bortCount + length + '-' + colorNum + '-N';
+                                }
+                            }
+                        }
+                        else if (formData['bort'] && formData['diameter']) {
                             extend = '' + formData['bort'] + formData['diameter'];
                         }
                         break;

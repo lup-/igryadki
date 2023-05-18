@@ -83,6 +83,13 @@
             </div>
         </div>
         <b-form-row class="my-4">
+            <b-col cols="12">
+                <b-alert variant="danger" show v-if="skuConstructed && (!priceFound || !canAddToCart)">Нет в наличии</b-alert>
+                <b-alert variant="info" show v-if="!skuConstructed">Выберите все параметры</b-alert>
+            </b-col>
+        </b-form-row>
+
+        <b-form-row class="my-4">
             <b-button class="btn-cart" variant="primary" size="lg" block :disabled="!canAddToCart" @click="addToCart">
                 {{isLoading && loadingMessage ? loadingMessage : 'В корзину'}}
                 <div class="loader" v-if="isLoading"></div>
@@ -112,7 +119,7 @@
 
     export default {
         name: "OrderForm",
-        props: ['fields', 'formType', 'isLoading', 'loadingMessage', 'cartAvailable'],
+        props: ['fields', 'formType', 'isLoading', 'loadingMessage', 'cartAvailable', 'skuConstructed', 'priceFound'],
         components: {ColorInput, RadioInput, IntInput, TeplicaSh},
         data() {
             let values = this.fields.reduce( (aggr, fieldData) => {

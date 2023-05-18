@@ -115,7 +115,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .selected-color {
         display: inline-block;
         border: 1px solid #ced4da;

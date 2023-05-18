@@ -37,7 +37,7 @@ export default {
                 {value: 65, title: '65 см'},
                 {value: 80, title: '80 см'},
                 {value: 100, title: '100 см'},
-                {value: 120, title: '120 см'},
+                //{value: 120, title: '120 см'},
             ]
         },
         {
@@ -45,7 +45,6 @@ export default {
             title: 'Длина',
             type: 'radio',
             values: [
-                {value: 1, title: '1 м'},
                 {value: 2, title: '2 м'},
                 {value: 3, title: '3 м'},
                 {value: 4, title: '4 м'},
@@ -75,6 +74,20 @@ export default {
             ]
         },
         {
+            code: 'legs', title: 'Ножки', type: 'radio',
+            values: [
+                {value: 1, title: 'С ножками', selected: true},
+                {value: 0, title: 'Без', disabled: true},
+            ],
+            filter: function (value) {
+                if (this.values['form'] === 'square') {
+                    return value.value === 1;
+                }
+
+                return true;
+            },
+        },
+        {
             code: 'levels',
             title: 'Ярусы',
             type: 'radio',
@@ -82,7 +95,17 @@ export default {
                 {value: 1, title: '1 ярус'},
                 {value: 2, title: '2 яруса'},
                 {value: 3, title: '3 яруса'},
-            ]
+            ],
+            filter: function (value) {
+                if (this.values['form'] === 'poly') {
+                    return value.value !== 2;
+                }
+                else {
+                    return value.value !== 3;
+                }
+
+                //return true;
+            },
         },
         {
             code: 'color',
@@ -124,7 +147,13 @@ export default {
             type: 'radio',
             filter: function (value) {
                 let levels = this.values['levels'] || 1;
-                return value.levels === levels;
+                let isPoly = this.values['form'] === 'poly';
+                if (isPoly) {
+                    return value.levels === levels && value.value >= 40 && value.value !== 50;
+                }
+                else {
+                    return value.levels === levels && value.value <= 100;
+                }
             },
             values: [
                 {value: 30, title: '30 см', levels: 1},
@@ -141,13 +170,13 @@ export default {
 
                 {value: 80, title: '80-40 см', levels: 2},
                 {value: 100, title: '100-60 см', levels: 2},
-                {value: 120, title: '120-80 см', levels: 2},
-                {value: 140, title: '140-100 см', levels: 2},
-                {value: 160, title: '160-120 см', levels: 2},
-                {value: 180, title: '180-140 см', levels: 2},
-                {value: 200, title: '200-160 см', levels: 2},
+                //{value: 120, title: '120-80 см', levels: 2},
+                //{value: 140, title: '140-100 см', levels: 2},
+                //{value: 160, title: '160-120 см', levels: 2},
+                //{value: 180, title: '180-140 см', levels: 2},
+                //{value: 200, title: '200-160 см', levels: 2},
 
-                {value: 120, title: '120-80-40 см', levels: 3},
+                //{value: 120, title: '120-80-40 см', levels: 3},
                 {value: 140, title: '140-100-60 см', levels: 3},
                 {value: 160, title: '160-120-80 см', levels: 3},
                 {value: 180, title: '180-140-100 см', levels: 3},
